@@ -1,8 +1,8 @@
 package com.meni.server.rest;
 
-import com.meni.server.model.DogDto;
-import com.meni.server.repo.Dog;
-import com.meni.server.service.DogsService;
+import com.meni.server.model.AdDto;
+import com.meni.server.repo.Ad;
+import com.meni.server.service.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,24 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dogs")
-public class DogsController {
+@RequestMapping("/ads")
+public class AdController {
     @Autowired
-    DogsService service;
+    AdsService service;
 
     @GetMapping
-    public List<Dog> getDogs() {
-        return service.getDogs();
+    public List<Ad> getAds() {
+        return service.getAds();
     }
 
     @PostMapping
-    public void postDogs(@RequestBody DogDto dto) {
+    public void postAd(@RequestBody AdDto dto) {
         service.add(dto);
     }
 
     @GetMapping("/{id}")
-    public Dog getById(@PathVariable(required = true) long id) {
-        return service.getDogById(id);
+    public Ad getById(@PathVariable(required = true) long id) {
+        return service.getAdById(id);
     }
 
     @DeleteMapping("/{id}")
