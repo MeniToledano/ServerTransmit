@@ -1,6 +1,6 @@
 package com.meni.server.model;
 
-public class PersonDto {
+public class UserDto {
 
     private String name;
     private String lastName;

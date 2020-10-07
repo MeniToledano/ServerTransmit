@@ -1,23 +1,22 @@
 package com.meni.server.rest;
 
-import com.meni.server.model.AdDto;
-import com.meni.server.model.RouteDto;
-import com.meni.server.repo.Route;
-import com.meni.server.service.RoutesService;
+import com.meni.server.repo.RequestedRoute;
+import com.meni.server.repo.VolunteerRoute;
+import com.meni.server.service.VolunteersRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/routes")
-public class RoutesController {
+@RequestMapping("/volunteerRoutes")
+public class VolunteerRoutesController {
     @Autowired
-    RoutesService service;
+    VolunteersRoutesService service;
+
 
     @GetMapping
-    public List<Route> getRoutes() {
+    public List<VolunteerRoute> getRoutes() {
         return service.getRoutes();
     }
 
@@ -27,7 +26,7 @@ public class RoutesController {
 //    }
 
     @GetMapping("/{id}")
-    public Route getById(@PathVariable(required = true) long id) {
+    public VolunteerRoute getById(@PathVariable(required = true) long id) {
         return service.getAdById(id);
     }
 
@@ -35,6 +34,5 @@ public class RoutesController {
     public void delete(@PathVariable(required = true) long id) {
         service.delete(id);
     }
-
 
 }

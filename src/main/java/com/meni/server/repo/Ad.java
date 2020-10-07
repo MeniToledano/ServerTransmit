@@ -1,8 +1,7 @@
 package com.meni.server.repo;
 
-import com.meni.server.anotations.PersonConverter;
+import com.meni.server.anotations.UserConverter;
 import com.meni.server.anotations.RouteConverter;
-import org.hibernate.annotations.LazyToOne;
 
 import javax.persistence.*;
 
@@ -14,20 +13,20 @@ public class Ad {
     private long id;
 
     @Column
-    @Convert(converter = PersonConverter.class)
-    private Person p;
+    @Convert(converter = UserConverter.class)
+    private User user;
 
     @Column
     @Convert(converter = RouteConverter.class)
-    private Route route;
+    private RequestedRoute route;
 
-    public Route getRoute() { return route; }
+    public RequestedRoute getRoute() { return route; }
 
-    public void setRoute(Route route) {this.route = route;  }
+    public void setRoute(RequestedRoute route) {this.route = route;  }
 
-    public Person getP() { return p;  }
+    public User getUser() { return user;  }
 
-    public void setP(Person p) { this.p = p; }
+    public void setUser(User user) { this.user = user; }
 
     public Ad() {  }
 

@@ -2,8 +2,8 @@ package com.meni.server.model;
 
 public class AdDto {
 
-    private long id;
-    private PersonDto p;
+//    private long id;
+    private UserDto user;
     private RouteDto route;
 
 
@@ -11,17 +11,17 @@ public class AdDto {
 
     public void setRoute(RouteDto route) {this.route = route;   }
 
-    public PersonDto getP() { return p;    }
+    public UserDto getUser() { return user;    }
 
-    public void setP(PersonDto p) { this.p = p;  }
+    public void setUser(UserDto user) { this.user = user;  }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+//    public long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
 
 
 

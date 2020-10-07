@@ -2,8 +2,8 @@ package com.meni.server.service;
 
 import com.meni.server.exception.RouteNotFoundException;
 import com.meni.server.model.RouteDto;
-import com.meni.server.repo.Route;
-import com.meni.server.repo.RoutesRepository;
+import com.meni.server.repo.RequestedRoute;
+import com.meni.server.repo.RequestedRoutesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class RoutesService {
+public class RequestedRoutesService {
     @Autowired
-    RoutesRepository repository;
+    RequestedRoutesRepository repository;
 
     public void add(RouteDto dto) {
         repository.save(toEntity(dto));
@@ -23,18 +23,18 @@ public class RoutesService {
         repository.deleteById(id);
     }
 
-    public List<Route> getRoutes() {
-        return (List<Route>) repository.findAll();
+    public List<RequestedRoute> getRoutes() {
+        return (List<RequestedRoute>) repository.findAll();
     }
 
-    public Route getAdById(long id) {
-        Optional<Route> optionalRoute = repository.findById(id);
+    public RequestedRoute getAdById(long id) {
+        Optional<RequestedRoute> optionalRoute = repository.findById(id);
         return optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id));
     }
 
-    private Route toEntity(RouteDto dto) {
+    private RequestedRoute toEntity(RouteDto dto) {
 
-        Route entity = new Route(dto, 1);
+        RequestedRoute entity = new RequestedRoute(dto);
 
 
         return entity;

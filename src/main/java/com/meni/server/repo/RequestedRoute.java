@@ -1,0 +1,96 @@
+package com.meni.server.repo;
+
+import com.meni.server.model.RouteDto;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
+public class RequestedRoute {
+
+    private String fromLocation;
+    private String toLocation;
+    private String exitTime;
+    private String arrivalTime;
+    @Id
+    @GeneratedValue
+    private long adId;
+
+
+    public long getAdId() {
+        return adId;
+    }
+
+    public void setAdId(long adId) {
+        this.adId = adId;
+    }
+
+
+
+    public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, long adId) {
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
+        this.exitTime = exitTime;
+        this.arrivalTime = arrivalTime;
+        this.adId = adId;
+    }
+
+    public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
+        this.exitTime = exitTime;
+        this.arrivalTime = arrivalTime;
+
+    }
+
+    public RequestedRoute(){    }
+
+    public RequestedRoute(RouteDto rdt) {
+        this.fromLocation = rdt.getFromLocation();
+        this.toLocation = rdt.getToLocation();
+        this.exitTime = rdt.getExitTime();
+        this.arrivalTime = rdt.getArrivalTime();
+    }
+
+    public String getFromLocation() {
+        return fromLocation;
+    }
+
+    public void setFromLocation(String fromLocation) {
+        this.fromLocation = fromLocation;
+    }
+
+    public String getToLocation() {
+        return toLocation;
+    }
+
+    public void setToLocation(String toLocation) {
+        this.toLocation = toLocation;
+    }
+
+    public String getExitTime() {
+        return exitTime;
+    }
+
+    public void setExitTime(String exitTime) {
+        this.exitTime = exitTime;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    @Override
+    public String toString() {
+        return fromLocation + ' '
+                + toLocation + ' '
+                + exitTime + ' '
+                +arrivalTime + ' '
+                ;
+    }
+}

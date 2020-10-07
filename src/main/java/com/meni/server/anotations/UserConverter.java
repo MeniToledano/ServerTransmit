@@ -1,21 +1,17 @@
 package com.meni.server.anotations;
 
-import com.meni.server.repo.Person;
+import com.meni.server.repo.User;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class PersonConverter implements AttributeConverter<Person, String> {
+public class UserConverter implements AttributeConverter<User, String> {
 
     private static final String SEPARATOR = " ";
 
-    /**
-     * Convert Color object to a String
-     * with format red|green|blue|alpha
-     */
     @Override
-    public String convertToDatabaseColumn(Person p) {
+    public String convertToDatabaseColumn(User p) {
         StringBuilder sb = new StringBuilder();
         sb.append(p.getAdId()).append(SEPARATOR)
                 .append(p.geteMail())
@@ -28,14 +24,11 @@ public class PersonConverter implements AttributeConverter<Person, String> {
         return sb.toString();
     }
 
-    /**
-     * Convert a String with format red|green|blue|alpha
-     * to a Color object
-     */
     @Override
-    public Person convertToEntityAttribute(String dataString) {
+    public User convertToEntityAttribute(String dataString) {
         String[] data = dataString.split(SEPARATOR);
-        return new Person(data[1], data[2], data[3], data[4], Long.parseLong(data[0]));
+        User u = new User(data[1], data[2], data[3], data[4], Long.parseLong(data[0]));
+        return u;
     }
 
 }

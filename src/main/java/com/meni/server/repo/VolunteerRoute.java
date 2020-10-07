@@ -5,35 +5,55 @@ import com.meni.server.model.RouteDto;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
-@Entity
-public class Route {
 
+@Entity                             //why have i needed to add this serializable??
+public class VolunteerRoute  implements Serializable {
+
+    @Id
+    @GeneratedValue
+    private long userId;
     private String fromLocation;
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
-    @Id
-    @GeneratedValue
-    private long adId;
 
-    public Route(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
+
+    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, long userId) {
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
         this.exitTime = exitTime;
         this.arrivalTime = arrivalTime;
+        this.userId = userId;
     }
-    public Route(){    }
 
-    public Route(RouteDto rdt, long adId) {
+    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
+        this.exitTime = exitTime;
+        this.arrivalTime = arrivalTime;
+
+    }
+
+    public VolunteerRoute(){    }
+
+    public VolunteerRoute(RouteDto rdt, long userId) {
         this.fromLocation = rdt.getFromLocation();
         this.toLocation = rdt.getToLocation();
         this.exitTime = rdt.getExitTime();
         this.arrivalTime = rdt.getArrivalTime();
-        this.adId = adId;
+        this.userId = userId;
     }
 
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
 
     public String getFromLocation() {
         return fromLocation;
@@ -67,6 +87,12 @@ public class Route {
         this.arrivalTime = arrivalTime;
     }
 
-
-
+    @Override
+    public String toString() {
+        return fromLocation + ' '
+                + toLocation + ' '
+                + exitTime + ' '
+                +arrivalTime + ' '
+                ;
+    }
 }

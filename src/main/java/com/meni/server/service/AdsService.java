@@ -2,8 +2,6 @@ package com.meni.server.service;
 
 import com.meni.server.exception.AdNotFoundException;
 import com.meni.server.model.AdDto;
-import com.meni.server.model.PersonDto;
-import com.meni.server.model.RouteDto;
 import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,7 @@ public class AdsService {
     @Autowired
     AdsRepository repository;
     @Autowired
-    RoutesRepository routesRepo;
+    RequestedRoutesRepository routesRepo;
 
     public void add(AdDto dto) {
         repository.save(toEntity(dto));
@@ -39,10 +37,13 @@ public class AdsService {
 
         Ad entity = new Ad();
 
-        entity.setRoute(new Route(dto.getRoute(), entity.getId()));
-        entity.setP(new Person(dto.getP(),entity.getId()));
+        entity.setRoute(new RequestedRoute(dto.getRoute()));
+        entity.setUser(new User(dto.getUser(),entity.getId()));
 
-        routesRepo.save(new Route(dto.getRoute() , entity.getId()));
+        //shouldnt I call here to the SERVICE insted of REPO???
+        RequestedRoute r = new RequestedRoute(dto.getRoute());
+        r.setAdId(entity.getId());
+        routesRepo.save(r);
 
         return entity;
     }

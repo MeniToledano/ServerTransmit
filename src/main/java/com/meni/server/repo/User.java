@@ -1,9 +1,8 @@
 package com.meni.server.repo;
 
-import com.meni.server.model.PersonDto;
+import com.meni.server.model.UserDto;
 
-public class Person {
-
+public class User {
 
     private String name;
     private String lastName;
@@ -11,14 +10,16 @@ public class Person {
     private String eMail;
     private long  adId;
 
-    public Person (PersonDto p, long adId){
+    public User(){}
+
+    public User(UserDto p, long adId){
         this.name = p.getName();
         this.lastName = p.getLastName();
         this.phone = p.getPhone();
         this.eMail = p.geteMail();
         this.adId = adId;
     }
-    public Person(String name, String lastName, String phone, String eMail, long adId) {
+    public User(String name, String lastName, String phone, String eMail, long adId) {
         this.name = name;
         this.lastName = lastName;
         this.phone = phone;
