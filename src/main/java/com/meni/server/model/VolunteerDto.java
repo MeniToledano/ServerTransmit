@@ -4,11 +4,11 @@ package com.meni.server.model;
 import com.meni.server.repo.User;
 import com.meni.server.repo.VolunteerRoute;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class VolunteerDto {
     private User user;
-    private LinkedList<VolunteerRoute> routes = new LinkedList<VolunteerRoute>();
+    private List<VolunteerRoute> routes;
 
     public User getUser() {
         return user;
@@ -18,11 +18,11 @@ public class VolunteerDto {
         this.user = user;
     }
 
-    public LinkedList<VolunteerRoute> getRoutes() {
+    public List<VolunteerRoute> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(LinkedList<VolunteerRoute> routes) {
+    public void setRoutes(List<VolunteerRoute> routes) {
         this.routes = routes;
     }
 }

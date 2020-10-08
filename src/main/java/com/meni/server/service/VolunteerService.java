@@ -6,7 +6,6 @@ import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +37,14 @@ public class VolunteerService {
 
     private Volunteer toEntity(VolunteerDto dto) {
 
-        Volunteer entity = new Volunteer(dto);
-        LinkedList<VolunteerRoute> listOfRoutes = entity.getRoutes();
-        for(VolunteerRoute r: listOfRoutes){ //save volunteer each route
-            r.setUserId(entity.getId());
-            routesRepo.save(r);
-        }
+        Volunteer entity = new Volunteer();
+        entity.setUser(dto.getUser());
+        entity.setRoutes(dto.getRoutes());
+//        List<VolunteerRoute> listOfRoutes = entity.getRoutes();
+//        for(VolunteerRoute r: listOfRoutes){ //save volunteer each route
+//            r.setId(entity.getVolunteerId());
+//            routesRepo.save(r);
+//        }
         return entity;
     }
 

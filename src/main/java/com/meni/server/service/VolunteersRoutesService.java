@@ -36,7 +36,7 @@ public class VolunteersRoutesService {
 
     private VolunteerRoute toEntity(RouteDto dto) {
 
-        VolunteerRoute entity = new VolunteerRoute(dto, 1);
+        VolunteerRoute entity = new VolunteerRoute(dto);
         System.out.println("");
 
         return entity;

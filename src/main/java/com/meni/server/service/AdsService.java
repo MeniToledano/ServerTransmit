@@ -17,7 +17,12 @@ public class AdsService {
     RequestedRoutesRepository routesRepo;
 
     public void add(AdDto dto) {
-        repository.save(toEntity(dto));
+        Ad ad = toEntity(dto);
+        repository.save(ad);
+
+//        handleAdRequests hr = new handleAdRequests();
+//        User u = hr.add(ad);//not elegant, prefer handlig all the request in diff section
+//        return u;
     }
 
     public void delete(long id) {
@@ -38,12 +43,12 @@ public class AdsService {
         Ad entity = new Ad();
 
         entity.setRoute(new RequestedRoute(dto.getRoute()));
-        entity.setUser(new User(dto.getUser(),entity.getId()));
-
+        entity.setUser(new User(dto.getUser()));
+ //       entity.getRoute().setAd(entity);
         //shouldnt I call here to the SERVICE insted of REPO???
-        RequestedRoute r = new RequestedRoute(dto.getRoute());
-        r.setAdId(entity.getId());
-        routesRepo.save(r);
+//        RequestedRoute r = new RequestedRoute(dto.getRoute());
+//        r.setRequestedRouteId(entity.getId());
+//        routesRepo.save(r);
 
         return entity;
     }

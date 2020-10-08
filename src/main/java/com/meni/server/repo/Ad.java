@@ -6,19 +6,22 @@ import com.meni.server.anotations.RouteConverter;
 import javax.persistence.*;
 
 @Entity
+@Table(name="Ads")
 public class Ad {
 
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
+    private RequestedRoute route;
+
     @Convert(converter = UserConverter.class)
     private User user;
 
-    @Column
-    @Convert(converter = RouteConverter.class)
-    private RequestedRoute route;
+
+    public Ad(User user) { this.user = user; }
 
     public RequestedRoute getRoute() { return route; }
 
@@ -30,7 +33,7 @@ public class Ad {
 
     public Ad() {  }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

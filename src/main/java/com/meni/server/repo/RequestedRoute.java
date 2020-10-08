@@ -2,39 +2,23 @@ package com.meni.server.repo;
 
 import com.meni.server.model.RouteDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name="RequestedRoutes")
 public class RequestedRoute {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long requestedRouteId;
 
     private String fromLocation;
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
-    @Id
-    @GeneratedValue
-    private long adId;
 
-
-    public long getAdId() {
-        return adId;
-    }
-
-    public void setAdId(long adId) {
-        this.adId = adId;
-    }
-
-
-
-    public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, long adId) {
-        this.fromLocation = fromLocation;
-        this.toLocation = toLocation;
-        this.exitTime = exitTime;
-        this.arrivalTime = arrivalTime;
-        this.adId = adId;
-    }
+    @OneToOne(mappedBy = "route")
+    private Ad ad;
 
     public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
         this.fromLocation = fromLocation;
@@ -83,6 +67,18 @@ public class RequestedRoute {
 
     public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    public void setAd(Ad ad) {  this.ad = ad;    }
+
+    //public Ad getAd() { return ad; }
+
+    public long getRequestedRouteId() {
+        return requestedRouteId;
+    }
+
+    public void setRequestedRouteId(long requestedRouteId) {
+        this.requestedRouteId = requestedRouteId;
     }
 
     @Override

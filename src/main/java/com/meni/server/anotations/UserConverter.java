@@ -13,8 +13,7 @@ public class UserConverter implements AttributeConverter<User, String> {
     @Override
     public String convertToDatabaseColumn(User p) {
         StringBuilder sb = new StringBuilder();
-        sb.append(p.getAdId()).append(SEPARATOR)
-                .append(p.geteMail())
+        sb.append(p.geteMail())
                 .append(SEPARATOR)
                 .append(p.getLastName())
                 .append(SEPARATOR)
@@ -27,7 +26,7 @@ public class UserConverter implements AttributeConverter<User, String> {
     @Override
     public User convertToEntityAttribute(String dataString) {
         String[] data = dataString.split(SEPARATOR);
-        User u = new User(data[1], data[2], data[3], data[4], Long.parseLong(data[0]));
+        User u = new User(data[0], data[1], data[2], data[3]);
         return u;
     }
 

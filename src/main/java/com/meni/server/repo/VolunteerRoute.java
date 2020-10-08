@@ -2,30 +2,44 @@ package com.meni.server.repo;
 
 import com.meni.server.model.RouteDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
-
-@Entity                             //why have i needed to add this serializable??
+@Entity
+@Table(name="VolunteersRoutes")
 public class VolunteerRoute  implements Serializable {
 
     @Id
-    @GeneratedValue
-    private long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String fromLocation;
     private String toLocation;
+
     private String exitTime;
     private String arrivalTime;
 
+    @ManyToOne
+    @JoinColumn(name="volunteerId")
+    private Volunteer volunteer;
 
-    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, long userId) {
+
+    public VolunteerRoute(){ }
+
+    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, Volunteer volunteer) {
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
         this.exitTime = exitTime;
         this.arrivalTime = arrivalTime;
-        this.userId = userId;
+        this.volunteer = volunteer;
+    }
+
+    public VolunteerRoute(long id, String fromLocation, String toLocation, String exitTime, String arrivalTime, Volunteer volunteer) {
+        this.id = id;
+        this.fromLocation = fromLocation;
+        this.toLocation = toLocation;
+        this.exitTime = exitTime;
+        this.arrivalTime = arrivalTime;
+        this.volunteer = volunteer;
     }
 
     public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
@@ -36,23 +50,20 @@ public class VolunteerRoute  implements Serializable {
 
     }
 
-    public VolunteerRoute(){    }
-
-    public VolunteerRoute(RouteDto rdt, long userId) {
+    public VolunteerRoute(RouteDto rdt) {
         this.fromLocation = rdt.getFromLocation();
         this.toLocation = rdt.getToLocation();
         this.exitTime = rdt.getExitTime();
         this.arrivalTime = rdt.getArrivalTime();
-        this.userId = userId;
     }
 
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFromLocation() {
