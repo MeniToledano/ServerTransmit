@@ -1,7 +1,7 @@
 package com.meni.server.repo;
 
 import com.meni.server.anotations.UserConverter;
-import com.meni.server.model.VolunteerDto;
+
 
 import javax.persistence.*;
 import java.util.List;
@@ -38,7 +38,7 @@ public class Volunteer {
         this.routes = routes;
     }
 
-    public Volunteer(VolunteerDto vole) {
+    public Volunteer(Volunteer vole) {
         this.routes = vole.getRoutes();
         this.user = vole.getUser();
     }

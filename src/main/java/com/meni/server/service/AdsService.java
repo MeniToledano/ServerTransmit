@@ -2,10 +2,13 @@ package com.meni.server.service;
 
 import com.meni.server.exception.AdNotFoundException;
 import com.meni.server.model.AdDto;
+import com.meni.server.model.RouteDto;
+import com.meni.server.model.UserDto;
 import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,9 +44,10 @@ public class AdsService {
     private Ad toEntity(AdDto dto) {
 
         Ad entity = new Ad();
-
-        entity.setRoute(new RequestedRoute(dto.getRoute()));
-        entity.setUser(new User(dto.getUser()));
+        UserDto udt = dto.getUser();
+        RouteDto routeDto = dto.getRoute();
+        entity.setRoute(new RequestedRoute(routeDto.getFromLocation(),routeDto.getToLocation(),routeDto.getExitTime(),routeDto.getArrivalTime()));
+        entity.setUser(new User(udt.getName(),udt.getLastName(),udt.getPhone(),udt.geteMail()));
  //       entity.getRoute().setAd(entity);
         //shouldnt I call here to the SERVICE insted of REPO???
 //        RequestedRoute r = new RequestedRoute(dto.getRoute());

@@ -30,13 +30,6 @@ public class RequestedRoute {
 
     public RequestedRoute(){    }
 
-    public RequestedRoute(RouteDto rdt) {
-        this.fromLocation = rdt.getFromLocation();
-        this.toLocation = rdt.getToLocation();
-        this.exitTime = rdt.getExitTime();
-        this.arrivalTime = rdt.getArrivalTime();
-    }
-
     public String getFromLocation() {
         return fromLocation;
     }

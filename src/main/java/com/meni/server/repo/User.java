@@ -12,13 +12,6 @@ public class User {
 
     public User(){}
 
-    public User(UserDto p){
-        this.name = p.getName();
-        this.lastName = p.getLastName();
-        this.phone = p.getPhone();
-        this.eMail = p.geteMail();
-
-    }
     public User(String name, String lastName, String phone, String eMail) {
         this.name = name;
         this.lastName = lastName;

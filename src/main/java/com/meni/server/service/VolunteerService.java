@@ -1,11 +1,14 @@
 package com.meni.server.service;
 
 import com.meni.server.exception.VolunteerNotFoundException;
+import com.meni.server.model.RouteDto;
+import com.meni.server.model.UserDto;
 import com.meni.server.model.VolunteerDto;
 import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,7 @@ public class VolunteerService {
 
     public void add(VolunteerDto dto) {
         Volunteer v = toEntity(dto);
+
         repository.save(v);
     }
 
@@ -38,14 +42,26 @@ public class VolunteerService {
     private Volunteer toEntity(VolunteerDto dto) {
 
         Volunteer entity = new Volunteer();
-        entity.setUser(dto.getUser());
-        entity.setRoutes(dto.getRoutes());
-//        List<VolunteerRoute> listOfRoutes = entity.getRoutes();
-//        for(VolunteerRoute r: listOfRoutes){ //save volunteer each route
-//            r.setId(entity.getVolunteerId());
-//            routesRepo.save(r);
-//        }
+        UserDto userDto = dto.getUser();
+        User user = new User(userDto.getName(),userDto.getLastName(),userDto.getPhone(),userDto.geteMail());
+
+        entity.setUser(user);
+ //      entity.setRoutes(new RequestedRoute(dto.getRoutes()));
+     //   dto.getRoutes().stream().forEach(routeDto -> System.out.println(routeDto));
+
+
+        List<RouteDto> listOfRoutes = dto.getRoutes();
+        List<VolunteerRoute> vr  = new LinkedList<>();
+        for(RouteDto r: listOfRoutes){
+            vr.add(new VolunteerRoute(r.getFromLocation(),r.getToLocation(),r.getExitTime(), r.getArrivalTime()));
+        }
+        entity.setRoutes(vr);
+
+        for (VolunteerRoute volRoute: vr){
+            volRoute.setVolunteer(entity);
+        }
         return entity;
+
     }
 
 

@@ -18,6 +18,10 @@ public class VolunteerRoute  implements Serializable {
     private String exitTime;
     private String arrivalTime;
 
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
+
     @ManyToOne
     @JoinColumn(name="volunteerId")
     private Volunteer volunteer;
