@@ -8,11 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class VolunteerDto {
-
     private UserDto user;
-
     private List<RouteDto> routes;
-
-
-
 }

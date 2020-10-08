@@ -47,7 +47,7 @@ public class AdsService {
         UserDto udt = dto.getUser();
         RouteDto routeDto = dto.getRoute();
         entity.setRoute(new RequestedRoute(routeDto.getFromLocation(),routeDto.getToLocation(),routeDto.getExitTime(),routeDto.getArrivalTime()));
-        entity.setUser(new User(udt.getName(),udt.getLastName(),udt.getPhone(),udt.geteMail()));
+        entity.setUser(new User(udt.getName(),udt.getLastName(),udt.getPhone(),udt.getEmail()));
  //       entity.getRoute().setAd(entity);
         //shouldnt I call here to the SERVICE insted of REPO???
 //        RequestedRoute r = new RequestedRoute(dto.getRoute());

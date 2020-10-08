@@ -43,7 +43,7 @@ public class VolunteerService {
 
         Volunteer entity = new Volunteer();
         UserDto userDto = dto.getUser();
-        User user = new User(userDto.getName(),userDto.getLastName(),userDto.getPhone(),userDto.geteMail());
+        User user = new User(userDto.getName(),userDto.getLastName(),userDto.getPhone(),userDto.getEmail());
 
         entity.setUser(user);
  //      entity.setRoutes(new RequestedRoute(dto.getRoutes()));
