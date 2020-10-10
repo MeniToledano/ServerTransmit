@@ -34,7 +34,7 @@ public class RequestedRoutesService {
 
     private RequestedRoute toEntity(RouteDto dto) {
 
-        RequestedRoute entity = new RequestedRoute(dto.getFromLocation(), dto.getToLocation(), dto.getExitTime(),dto.getArrivalTime());
+        RequestedRoute entity = new RequestedRoute(dto.getFromLocation(), dto.getToLocation(), dto.getExitTime(), dto.getArrivalTime());
 
 
         return entity;

@@ -2,12 +2,11 @@ package com.meni.server.repo;
 
 import com.meni.server.anotations.UserConverter;
 
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="Volunteers")
+@Table(name = "Volunteers")
 public class Volunteer {
 
     @Id
@@ -18,7 +17,7 @@ public class Volunteer {
     @Column
     @Convert(converter = UserConverter.class)
     private User user;
-//
+    //
 //    @Column
 //    @Convert(converter = LinkedListConverter.class)
     @OneToMany(
@@ -28,11 +27,13 @@ public class Volunteer {
     )
     private List<VolunteerRoute> routes;
 
-    public Volunteer(){}
+    public Volunteer() {
+    }
 
     public Volunteer(User user) {
         this.user = user;
     }
+
     public Volunteer(User user, List<VolunteerRoute> routes) {
         this.user = user;
         this.routes = routes;
@@ -42,6 +43,7 @@ public class Volunteer {
         this.routes = vole.getRoutes();
         this.user = vole.getUser();
     }
+
     public long getVolunteerId() {
         return volunteerId;
     }
@@ -65,8 +67,6 @@ public class Volunteer {
     public void setRoutes(List<VolunteerRoute> routes) {
         this.routes = routes;
     }
-
-
 
 
 }

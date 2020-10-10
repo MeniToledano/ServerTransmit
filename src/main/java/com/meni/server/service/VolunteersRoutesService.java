@@ -2,7 +2,6 @@ package com.meni.server.service;
 
 import com.meni.server.exception.RouteNotFoundException;
 import com.meni.server.model.RouteDto;
-import com.meni.server.repo.RequestedRoute;
 import com.meni.server.repo.VolunteerRoute;
 import com.meni.server.repo.VolunteersRoutsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

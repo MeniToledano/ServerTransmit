@@ -1,12 +1,11 @@
 package com.meni.server.repo;
 
 import com.meni.server.anotations.UserConverter;
-import com.meni.server.anotations.RouteConverter;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="Ads")
+@Table(name = "Ads")
 public class Ad {
 
     @Id
@@ -21,17 +20,28 @@ public class Ad {
     private User user;
 
 
-    public Ad(User user) { this.user = user; }
+    public Ad(User user) {
+        this.user = user;
+    }
 
-    public RequestedRoute getRoute() { return route; }
+    public Ad() {
+    }
 
-    public void setRoute(RequestedRoute route) {this.route = route;  }
+    public RequestedRoute getRoute() {
+        return route;
+    }
 
-    public User getUser() { return user;  }
+    public void setRoute(RequestedRoute route) {
+        this.route = route;
+    }
 
-    public void setUser(User user) { this.user = user; }
+    public User getUser() {
+        return user;
+    }
 
-    public Ad() {  }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

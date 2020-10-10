@@ -1,8 +1,6 @@
 package com.meni.server.rest;
 
-import com.meni.server.model.AdDto;
 import com.meni.server.model.VolunteerDto;
-import com.meni.server.repo.Ad;
 import com.meni.server.repo.Volunteer;
 import com.meni.server.service.VolunteerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class VolunteerController {
 
     @GetMapping("/{id}")
     public Volunteer getById(@PathVariable(required = true) long id) {
-        return service.getAdById(id);
+        return service.getVolunteersById(id);
     }
 
     @DeleteMapping("/{id}")

@@ -17,14 +17,14 @@ public class handleAdRequests {
     private VolunteerController vc = new VolunteerController();
 
 
-    public User add(Ad ad){
+    public User add(Ad ad) {
         String from = ad.getRoute().getFromLocation();
         String to = ad.getRoute().getToLocation();
         List<VolunteerRoute> vr = vrc.getRoutes();
         User volunteer = null;
-        for(VolunteerRoute route : vr){
-            if(route.getFromLocation().equals(from)){
-                volunteer = (vc.getById(route.getId())).getUser() ;
+        for (VolunteerRoute route : vr) {
+            if (route.getFromLocation().equals(from)) {
+                volunteer = (vc.getById(route.getId())).getUser();
             }
         }
         return volunteer;

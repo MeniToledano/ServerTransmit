@@ -1,11 +1,9 @@
 package com.meni.server.repo;
 
-import com.meni.server.model.RouteDto;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name="RequestedRoutes")
+@Table(name = "RequestedRoutes")
 public class RequestedRoute {
 
     @Id
@@ -20,7 +18,7 @@ public class RequestedRoute {
     @OneToOne(mappedBy = "route")
     private Ad ad;
 
-    public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
+    public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
         this.exitTime = exitTime;
@@ -28,7 +26,8 @@ public class RequestedRoute {
 
     }
 
-    public RequestedRoute(){    }
+    public RequestedRoute() {
+    }
 
     public String getFromLocation() {
         return fromLocation;
@@ -62,7 +61,9 @@ public class RequestedRoute {
         this.arrivalTime = arrivalTime;
     }
 
-    public void setAd(Ad ad) {  this.ad = ad;    }
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
 
     //public Ad getAd() { return ad; }
 
@@ -79,7 +80,7 @@ public class RequestedRoute {
         return fromLocation + ' '
                 + toLocation + ' '
                 + exitTime + ' '
-                +arrivalTime + ' '
+                + arrivalTime + ' '
                 ;
     }
 }

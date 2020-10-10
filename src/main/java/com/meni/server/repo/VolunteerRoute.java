@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="VolunteersRoutes")
-public class VolunteerRoute  implements Serializable {
+@Table(name = "VolunteersRoutes")
+public class VolunteerRoute implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,17 +17,13 @@ public class VolunteerRoute  implements Serializable {
 
     private String exitTime;
     private String arrivalTime;
-
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
-    }
-
     @ManyToOne
-    @JoinColumn(name="volunteerId")
+    @JoinColumn(name = "volunteerId")
     private Volunteer volunteer;
 
+    public VolunteerRoute() {
+    }
 
-    public VolunteerRoute(){ }
 
     public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, Volunteer volunteer) {
         this.fromLocation = fromLocation;
@@ -46,7 +42,7 @@ public class VolunteerRoute  implements Serializable {
         this.volunteer = volunteer;
     }
 
-    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime ) {
+    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
         this.fromLocation = fromLocation;
         this.toLocation = toLocation;
         this.exitTime = exitTime;
@@ -61,6 +57,9 @@ public class VolunteerRoute  implements Serializable {
         this.arrivalTime = rdt.getArrivalTime();
     }
 
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
 
     public long getId() {
         return id;
@@ -107,7 +106,7 @@ public class VolunteerRoute  implements Serializable {
         return fromLocation + ' '
                 + toLocation + ' '
                 + exitTime + ' '
-                +arrivalTime + ' '
+                + arrivalTime + ' '
                 ;
     }
 }

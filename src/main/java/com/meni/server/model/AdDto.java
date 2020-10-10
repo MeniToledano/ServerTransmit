@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class AdDto {
 
-//    private long id;
+    //    private long id;
     private UserDto user;
     private RouteDto route;
 
@@ -27,7 +27,6 @@ public class AdDto {
 //    public void setId(long id) {
 //        this.id = id;
 //    }
-
 
 
 }

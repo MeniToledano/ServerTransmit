@@ -18,11 +18,6 @@ public class RequestedRoutesController {
         return service.getRoutes();
     }
 
-//    @PostMapping
-//    public void postAd(@RequestBody RouteDto dto) {
-//        service.add(dto);
-//    }
-
     @GetMapping("/{id}")
     public RequestedRoute getById(@PathVariable(required = true) long id) {
         return service.getAdById(id);
@@ -32,6 +27,5 @@ public class RequestedRoutesController {
     public void delete(@PathVariable(required = true) long id) {
         service.delete(id);
     }
-
 
 }

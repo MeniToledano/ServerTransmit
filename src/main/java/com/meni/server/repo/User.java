@@ -1,7 +1,5 @@
 package com.meni.server.repo;
 
-import com.meni.server.model.UserDto;
-
 public class User {
 
     private String name;
@@ -10,7 +8,8 @@ public class User {
     private String eMail;
 
 
-    public User(){}
+    public User() {
+    }
 
     public User(String name, String lastName, String phone, String eMail) {
         this.name = name;

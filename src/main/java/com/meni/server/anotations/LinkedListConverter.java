@@ -1,6 +1,5 @@
 package com.meni.server.anotations;
 
-import com.meni.server.repo.RequestedRoute;
 import com.meni.server.repo.VolunteerRoute;
 
 import javax.persistence.AttributeConverter;
