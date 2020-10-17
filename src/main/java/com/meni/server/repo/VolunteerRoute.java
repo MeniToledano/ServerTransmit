@@ -12,34 +12,18 @@ public class VolunteerRoute implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String fromLocation;
     private String toLocation;
-
     private String exitTime;
     private String arrivalTime;
+
+
     @ManyToOne
-    @JoinColumn(name = "volunteerId")
-    private Volunteer volunteer;
+    @JoinColumn(name = "userId")
+    private User user;
 
     public VolunteerRoute() {
-    }
-
-
-    public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime, Volunteer volunteer) {
-        this.fromLocation = fromLocation;
-        this.toLocation = toLocation;
-        this.exitTime = exitTime;
-        this.arrivalTime = arrivalTime;
-        this.volunteer = volunteer;
-    }
-
-    public VolunteerRoute(long id, String fromLocation, String toLocation, String exitTime, String arrivalTime, Volunteer volunteer) {
-        this.id = id;
-        this.fromLocation = fromLocation;
-        this.toLocation = toLocation;
-        this.exitTime = exitTime;
-        this.arrivalTime = arrivalTime;
-        this.volunteer = volunteer;
     }
 
     public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
@@ -57,8 +41,13 @@ public class VolunteerRoute implements Serializable {
         this.arrivalTime = rdt.getArrivalTime();
     }
 
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user){
+        this.user = user;
     }
 
     public long getId() {

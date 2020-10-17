@@ -1,31 +1,42 @@
 package com.meni.server.rest;
 
-import com.meni.server.repo.Volunteer;
+import com.meni.server.model.RouteDto;
 import com.meni.server.repo.VolunteerRoute;
-import com.meni.server.service.VolunteerService;
 import com.meni.server.service.VolunteersRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/volunteers/routes")
+@RequestMapping("/user/{id}/routes")
 public class VolunteerRoutesController {
     @Autowired
     VolunteersRoutesService routesService;
-    @Autowired
-    VolunteerService service;
 
     @GetMapping
-    public List<VolunteerRoute> getRoutes() {
-        return routesService.getRoutes();
+    public Map<String, List<VolunteerRoute>> getRoutes() {
+        HashMap<String,RouteDto[]> ob = new HashMap<>();
+        return Map.of("routes",routesService.getRoutes());
     }
 
-    @GetMapping("/from/{fromLocation}")
-    public List<Volunteer> getByFromLocation(@PathVariable(required = true) String fromLocation) {
-        return service.getVolunteersByRoute_FromLocation(fromLocation);
+
+    @PostMapping
+    public void postUser(@PathVariable("id") long userID ,@RequestBody RouteDto[] routes) {
+
+        List<VolunteerRoute> list= routesService.add(userID, routes);
+        //return list;
     }
+
+
+//    @GetMapping("/from/{fromLocation}")
+//    public List<Volunteer> getByFromLocation(@PathVariable(required = true) String fromLocation) {
+//        return service.getVolunteersByRoute_FromLocation(fromLocation);
+//    }
+
+
 
     @GetMapping("/{id}")
     public VolunteerRoute getById(@PathVariable(required = true) long id) {
