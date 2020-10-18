@@ -24,10 +24,8 @@ public class VolunteerRoutesController {
 
 
     @PostMapping
-    public void postUser(@PathVariable("id") long userID ,@RequestBody RouteDto[] routes) {
-
-        List<VolunteerRoute> list= routesService.add(userID, routes);
-        //return list;
+    public Map<String, List<VolunteerRoute>> postUser(@PathVariable("id") long userID ,@RequestBody RouteDto[] routes) {
+        return Map.of("routes",routesService.add(userID, routes));
     }
 
 

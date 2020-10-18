@@ -16,9 +16,13 @@ public class Ad {
     @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
     private RequestedRoute route;
 
-    @Convert(converter = UserConverter.class)
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
+    private String title;
+
+    private String description;
 
     public Ad(User user) {
         this.user = user;
@@ -51,4 +55,11 @@ public class Ad {
         this.id = id;
     }
 
+    public String getTitle() { return title;  }
+
+    public void setTitle(String title) { this.title = title;  }
+
+    public String getDescription() { return description;  }
+
+    public void setDescription(String description) {  this.description = description; }
 }

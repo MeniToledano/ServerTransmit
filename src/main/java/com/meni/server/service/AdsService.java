@@ -3,11 +3,7 @@ package com.meni.server.service;
 import com.meni.server.exception.AdNotFoundException;
 import com.meni.server.model.AdDto;
 import com.meni.server.model.RouteDto;
-import com.meni.server.model.UserDto;
-import com.meni.server.repo.Ad;
-import com.meni.server.repo.AdsRepository;
-import com.meni.server.repo.RequestedRoute;
-import com.meni.server.repo.User;
+import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +14,13 @@ import java.util.Optional;
 public class AdsService {
     @Autowired
     AdsRepository repository;
+    @Autowired
+    UserRepository userRepository;
 
-    public void add(AdDto dto) {
+    public Ad add(AdDto dto) {
         Ad ad = toEntity(dto);
-        repository.save(ad);
+        return repository.save(ad);
+
     }
 
     public void delete(long id) {
@@ -40,10 +39,14 @@ public class AdsService {
     private Ad toEntity(AdDto dto) {
 
         Ad entity = new Ad();
-        UserDto udt = dto.getUser();
+        long userId = dto.getUser_id();
         RouteDto routeDto = dto.getRoute();
         entity.setRoute(new RequestedRoute(routeDto.getFromLocation(), routeDto.getToLocation(), routeDto.getExitTime(), routeDto.getArrivalTime()));
-        entity.setUser(new User(udt.getName(), udt.getLastName(), udt.getPhone(), udt.getEmail()));
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.get();
+        entity.setUser(user);
+        entity.setDescription(dto.getDescription());
+        entity.setTitle(dto.getTitle());
 
         return entity;
     }

@@ -22,6 +22,9 @@ public class User{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<VolunteerRoute> routes;
 
+    @OneToOne(mappedBy = "route")
+    private Ad ad;
+
     public User() {
         routes = new LinkedList<>();
     }

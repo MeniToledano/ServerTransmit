@@ -7,26 +7,9 @@ import lombok.Setter;
 @Setter
 public class AdDto {
 
-    //    private long id;
-    private UserDto user;
+    private long user_id;
+    private String title;
+    private String description;
     private RouteDto route;
-
-//
-//    public RouteDto getRoute() { return route;  }
-//
-//    public void setRoute(RouteDto route) {this.route = route;   }
-//
-//    public UserDto getUser() { return user;    }
-//
-//    public void setUser(UserDto user) { this.user = user;  }
-
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
-
 
 }
