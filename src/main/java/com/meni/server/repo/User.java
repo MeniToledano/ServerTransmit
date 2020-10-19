@@ -14,6 +14,7 @@ public class User{
     @Column(name = "UserId")
     private long id;
 
+    private String status;
     private String name;
     private String lastName;
     private String phone;
@@ -22,7 +23,7 @@ public class User{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<VolunteerRoute> routes;
 
-    @OneToOne(mappedBy = "route")
+    @OneToOne(mappedBy = "route",cascade = CascadeType.PERSIST)
     private Ad ad;
 
     public User() {

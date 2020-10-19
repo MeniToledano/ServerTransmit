@@ -16,9 +16,13 @@ public class Ad {
     @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
     private RequestedRoute route;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
+
+
+
+    private String status;
 
     private String title;
 
@@ -29,6 +33,7 @@ public class Ad {
     }
 
     public Ad() {
+        this.status = "PENDING";
     }
 
     public RequestedRoute getRoute() {
@@ -60,6 +65,10 @@ public class Ad {
     public void setTitle(String title) { this.title = title;  }
 
     public String getDescription() { return description;  }
+
+    public String getStatus() { return status;  }
+
+    public void setStatus(String status) { this.status = status; }
 
     public void setDescription(String description) {  this.description = description; }
 }

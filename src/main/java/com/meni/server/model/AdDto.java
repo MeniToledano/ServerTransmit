@@ -8,8 +8,8 @@ import lombok.Setter;
 public class AdDto {
 
     private long user_id;
+    private String status;
     private String title;
     private String description;
     private RouteDto route;
-
 }
