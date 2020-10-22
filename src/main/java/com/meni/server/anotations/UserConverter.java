@@ -13,7 +13,7 @@ public class UserConverter implements AttributeConverter<User, String> {
     @Override
     public String convertToDatabaseColumn(User p) {
         StringBuilder sb = new StringBuilder();
-        sb.append(p.geteMail())
+        sb.append(p.getEMail())
                 .append(SEPARATOR)
                 .append(p.getLastName())
                 .append(SEPARATOR)

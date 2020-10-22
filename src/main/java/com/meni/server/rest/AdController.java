@@ -17,20 +17,26 @@ public class AdController {
     AdsService service;
 
     @GetMapping("/ads")
-    public Map<String , List<Ad>> getAds() {
+    public Map<String , List<AdDto>> getAds() {
         return Map.of("Ads",service.getAds());
     }
 
     @PostMapping("/ads")
-    public Ad postAd(@RequestBody AdDto dto) {
-        return service.add(dto);
+    public AdDto postAd(@RequestBody AdDto dto) { return service.add(dto); }
 
+    @GetMapping(value = "/user/{id}/ads")
+    public List<AdDto> getAdsByUserId(@PathVariable long id) { return service.getUserAds(id); }
+
+    @GetMapping(value = "/user/{id}/ads", params = {"sort","limit"})
+    public List<AdDto> getSortedAds(@RequestParam(value = "sort",required = false) String sort,
+                                    @RequestParam(value = "limit",required = false) String limit,
+                            @PathVariable long id) {
+        return service.getSortedAds(sort, 5, id);
     }
 
-    @GetMapping("/user/{id}/ads")
-    public Ad getById(@PathVariable(required = true) long id) {
-        return service.getAdById(id);
-    }
+
+    @GetMapping("/user/id/ads/{ad_id}")
+    public void delete(@PathVariable long ad_id) { service.getAdById(ad_id);  }
 
     @DeleteMapping("/user/{id}/ads/{ad_id}")
     public void delete(@PathVariable long ad_id,@PathVariable long id) { service.delete(ad_id);  }

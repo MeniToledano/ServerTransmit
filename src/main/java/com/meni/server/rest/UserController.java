@@ -17,29 +17,19 @@ public class UserController {
     UserService service;
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserDto> getUsers() {
         return service.getUsers();
     }
 
     @PostMapping
-    public User postUser(@RequestBody UserDto dto) {
-        User user = service.add(dto);
-        return user;
-    }
+    public UserDto postUser(@RequestBody UserDto dto) { return service.add(dto); }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public User updateUser(@PathVariable(required = true) long id, @RequestBody UserDto dto){
-        User user = service.update(id, dto);
-        return user;
-    }
+    public UserDto updateUser(@PathVariable(required = true) long id, @RequestBody UserDto dto){ return service.update(id, dto); }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable(required = true) long id) {
-        return service.getUserById(id);
-    }
+    public UserDto getById(@PathVariable(required = true) long id) { return service.getUserById(id); }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(required = true) long id) {
-        service.delete(id);
-    }
+    public void delete(@PathVariable(required = true) long id) { service.delete(id); }
 }

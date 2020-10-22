@@ -1,5 +1,7 @@
 package com.meni.server.repo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,17 +16,20 @@ public class User{
     @Column(name = "UserId")
     private long id;
 
-    private String status;
     private String name;
     private String lastName;
     private String phone;
     private String eMail;
 
+    public List<VolunteerRoute> getRoutes() {
+        return routes;
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<VolunteerRoute> routes;
 
-    @OneToOne(mappedBy = "route",cascade = CascadeType.PERSIST)
-    private Ad ad;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    private List<Ad> ads;
 
     public User() {
         routes = new LinkedList<>();
@@ -39,16 +44,18 @@ public class User{
 
     public void addRoutes(List<VolunteerRoute> listOfRoutes){
         for(VolunteerRoute route : listOfRoutes) {
-            System.out.println("asd");
-
             routes.add(route);
-            System.out.println("asd");
         }
     }
-//    public void removeRoute(VolunteerRoute route){
-//        routes.remove(route);
-//       // route.setUser(null);
-//    }
+
+    public void addAd(Ad ad){
+        this.ads.add(ad);
+    }
+
+    public List<Ad> getAds(){
+      return this.ads;
+    }
+
     public String getName() {
         return name;
     }
@@ -73,11 +80,11 @@ public class User{
         this.phone = phone;
     }
 
-    public String geteMail() {
+    public String getEMail() {
         return eMail;
     }
 
-    public void seteMail(String eMail) {
+    public void setEMail(String eMail) {
         this.eMail = eMail;
     }
 

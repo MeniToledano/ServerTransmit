@@ -1,12 +1,12 @@
 package com.meni.server.repo;
 
-import com.meni.server.anotations.UserConverter;
-
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "Ads")
-public class Ad {
+public class Ad implements Comparable<Ad>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +16,13 @@ public class Ad {
     @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
     private RequestedRoute route;
 
-    @OneToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
-
-
+    private LocalDateTime date;
     private String status;
-
     private String title;
-
     private String description;
 
     public Ad(User user) {
@@ -34,31 +31,22 @@ public class Ad {
 
     public Ad() {
         this.status = "PENDING";
+        this.date = LocalDateTime.now();
     }
 
-    public RequestedRoute getRoute() {
-        return route;
-    }
+    public LocalDateTime getDate() { return date; }
 
-    public void setRoute(RequestedRoute route) {
-        this.route = route;
-    }
+    public RequestedRoute getRoute() { return route; }
 
-    public User getUser() {
-        return user;
-    }
+    public void setRoute(RequestedRoute route) { this.route = route; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public User getUser() { return user; }
 
-    public Long getId() {
-        return id;
-    }
+    public void setUser(User user) { this.user = user; }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+
+    public void setId(long id) { this.id = id; }
 
     public String getTitle() { return title;  }
 
@@ -71,4 +59,10 @@ public class Ad {
     public void setStatus(String status) { this.status = status; }
 
     public void setDescription(String description) {  this.description = description; }
+
+    @Override
+    public int compareTo(Ad ad) {
+        LocalDateTime date = ad.getDate();
+        return date.compareTo(this.date);
+    }
 }
