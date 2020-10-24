@@ -2,7 +2,6 @@ package com.meni.server.rest;
 
 import com.meni.server.model.AdDto;
 import com.meni.server.model.StatusDTO;
-import com.meni.server.repo.Ad;
 import com.meni.server.service.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +24,15 @@ public class AdController {
     public AdDto postAd(@RequestBody AdDto dto) { return service.add(dto); }
 
     @GetMapping(value = "/user/{id}/ads")
-    public List<AdDto> getAdsByUserId(@PathVariable long id) { return service.getUserAds(id); }
+    public Map<String,List<AdDto>> getAdsByUserId(@PathVariable(required = true) long id) {
+        return Map.of("Ads", service.getUserAds(id));
+    }
 
     @GetMapping(value = "/user/{id}/ads", params = {"sort","limit"})
-    public List<AdDto> getSortedAds(@RequestParam(value = "sort",required = false) String sort,
-                                    @RequestParam(value = "limit",required = false) String limit,
-                            @PathVariable long id) {
-        return service.getSortedAds(sort, 5, id);
+    public Map<String,List<AdDto>> getSortedAds(@RequestParam(value = "sort",required = false) String sort,
+                                    @RequestParam(value = "limit",required = false) int limit,
+                            @PathVariable(required = true) long id) {
+        return Map.of("Ads", service.getSortedAds(sort, limit, id));
     }
 
 
@@ -46,6 +47,11 @@ public class AdController {
                            @PathVariable(required = true) long ad_id) {
         service.updateStatus(ad_id, status);
 
+    }
+
+    @GetMapping("/job/match")
+    public Map<String,Map<String,String>> findAllMatches(){
+        return Map.of("All matches:", service.matchRequestedRoutesWithVolunteerRoutes());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.meni.server.rest;
 
+import com.meni.server.model.RouteDto;
 import com.meni.server.repo.RequestedRoute;
 import com.meni.server.service.RequestedRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,12 @@ public class RequestedRoutesController {
     RequestedRoutesService service;
 
     @GetMapping
-    public List<RequestedRoute> getRoutes() {
+    public List<RouteDto> getRoutes() {
         return service.getRoutes();
     }
 
     @GetMapping("/{id}")
-    public RequestedRoute getById(@PathVariable(required = true) long id) {
+    public RouteDto getById(@PathVariable(required = true) long id) {
         return service.getAdById(id);
     }
 

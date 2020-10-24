@@ -5,15 +5,11 @@ import com.meni.server.exception.StatusNotValidException;
 import com.meni.server.model.AdDto;
 import com.meni.server.model.RouteDto;
 import com.meni.server.model.StatusDTO;
-import com.meni.server.model.UserDto;
 import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class AdsService {
@@ -21,70 +17,34 @@ public class AdsService {
     AdsRepository adRepository;
     @Autowired
     UserRepository userRepository;
-
-
+    @Autowired
+    VolunteersRoutsRepository volunteersRoutsRepository;
 
     public void delete(long id) {
         adRepository.deleteById(id);
     }
 
     public List<AdDto> getAds() {
-        return convertListAdsToListAdsDto((List<Ad>)adRepository.findAll());
+        return Ad.convertListAdsToListAdsDto((List<Ad>)adRepository.findAll());
     }
 
     public AdDto add(AdDto dto) {
         Ad ad = toEntity(dto);
         Ad updatedAd = adRepository.save(ad);
-        AdDto adDto= convertAdToAdDTO(updatedAd);
-        System.out.println("a");
+        AdDto adDto= Ad.convertAdToAdDTO(updatedAd);
         Optional<User> optionalUser = userRepository.findById(adDto.getUser_id());
-        System.out.println("v");
         User user = optionalUser.get();
         user.addAd(ad);
         userRepository.save(user);
         return adDto;
 
     }
-    private AdDto convertAdToAdDTO(Ad ad){
-        AdDto adDto = new AdDto();
-        adDto.setDate(ad.getDate());
-        adDto.setDescription(ad.getDescription());
-        adDto.setId(ad.getId());
-        adDto.setStatus(ad.getStatus());
-        adDto.setTitle(ad.getTitle());
-        adDto.setUser_id(ad.getUser().getId());
-
-        UserDto user = new UserDto();
-        user.setUserId(ad.getUser().getId());
-        user.setPhone(ad.getUser().getPhone());
-        user.setName(ad.getUser().getName());
-        user.setLastName(ad.getUser().getLastName());
-        user.setEmail(ad.getUser().getEMail());
-
-       adDto.setUser(user);
-
-        RouteDto route = new RouteDto();
-        route.setFromLocation(ad.getRoute().getFromLocation());
-        route.setToLocation(ad.getRoute().getToLocation());
-        route.setExitTime(ad.getRoute().getExitTime());
-        route.setArrivalTime(ad.getRoute().getArrivalTime());
-        adDto.setRoute(route);
-
-        return adDto;
-    }
-
-    private List<AdDto> convertListAdsToListAdsDto(List<Ad> ads){
-        List<AdDto> adsDTO = new LinkedList<>();
-        for (Ad ad : ads){
-            adsDTO.add(convertAdToAdDTO(ad));
-        }
-        return adsDTO;
-    }
 
     public List<AdDto> getUserAds(long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.get();
-        return convertListAdsToListAdsDto(user.getAds());
+        List<AdDto> asd = Ad.convertListAdsToListAdsDto(user.getAds());
+        return asd;
     }
 
     public Ad getAdById(long id) {
@@ -117,7 +77,7 @@ public class AdsService {
     public void updateStatus(long ad_id, StatusDTO status){
         Ad ad = getAdById(ad_id);
         checkStatus(status.getStatus());
-        ad.setStatus(status.getStatus());
+        ad.setStatus(status.getStatus().toUpperCase());
         adRepository.save(ad);
     }
 
@@ -138,7 +98,24 @@ public class AdsService {
         User user = optionalUser.get();
         List<Ad> list = user.getAds();
         Collections.sort(list);
-        return convertListAdsToListAdsDto(list.subList(0, Math.min(list.size(), limit)));
+        return Ad.convertListAdsToListAdsDto(list.subList(0, Math.min(list.size(), limit)));
 
+    }
+
+    public Map<String,String> matchRequestedRoutesWithVolunteerRoutes() {
+        List<Ad> allAds = (List<Ad>) adRepository.findAll();
+        List<VolunteerRoute> volunteerRoutes = (List<VolunteerRoute>) volunteersRoutsRepository.findAll();
+        HashMap<String, String> matches = new HashMap<>();
+
+        for (Ad ad : allAds) {
+            RequestedRoute requestedRoutes = ad.getRoute();
+            List<VolunteerRoute> matchRoutes = volunteersRoutsRepository.findByFromLocation(requestedRoutes.getFromLocation());
+            if (matchRoutes != null) {
+                for (VolunteerRoute volunteerRoute: matchRoutes){
+                    matches.put("Ad id: "+ad.getId().toString(), "Volunteer user id: "+Long.toString(volunteerRoute.getId()));
+                }
+            }
+        }
+        return matches;
     }
 }

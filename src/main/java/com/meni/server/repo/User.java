@@ -1,6 +1,7 @@
 package com.meni.server.repo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.meni.server.model.UserDto;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -90,5 +91,31 @@ public class User{
 
     public long getId() {
         return id;
+    }
+
+    public static UserDto convertUserToUserDto(User user){
+        if(user == null){return null;}
+        UserDto userDto = new UserDto();
+        userDto.setEmail(user.getEMail());
+        userDto.setLastName(user.getLastName());
+        userDto.setName(user.getName());
+        userDto.setPhone(user.getPhone());
+        userDto.setUserId(user.getId());
+
+//        if(user.getAds() != null) {
+//            userDto.setAds(Ad.convertListAdsToListAdsDto(user.getAds()));
+//        }
+//        if(user.getRoutes() != null) {
+//            userDto.setRoutes(VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(user.getRoutes()));
+//        }
+        return userDto;
+    }
+
+    public static List<UserDto> convertListUsersToListUsersDto(List<User> list){
+        List<UserDto> newList = new LinkedList<>();
+        for (User user : list){
+            newList.add(convertUserToUserDto(user));
+        }
+        return newList;
     }
 }

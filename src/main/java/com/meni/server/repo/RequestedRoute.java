@@ -1,6 +1,10 @@
 package com.meni.server.repo;
 
+import com.meni.server.model.RouteDto;
+
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "RequestedRoutes")
@@ -14,6 +18,10 @@ public class RequestedRoute {
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
+
+    public Ad getAd() {
+        return ad;
+    }
 
     @OneToOne(mappedBy = "route")
     private Ad ad;
@@ -82,5 +90,27 @@ public class RequestedRoute {
                 + exitTime + ' '
                 + arrivalTime + ' '
                 ;
+    }
+
+    public static RouteDto convertRequestedRouteToRouteDto(RequestedRoute route) {
+        RouteDto routeDto = new RouteDto();
+
+        routeDto.setExitTime(route.getExitTime());
+        routeDto.setId(route.getRequestedRouteId());
+        routeDto.setArrivalTime(route.getArrivalTime());
+        routeDto.setFromLocation(route.getFromLocation());
+        routeDto.setToLocation(route.getToLocation());
+
+    //    routeDto.setAd(Ad.convertAdToAdDTO(route.getAd()));
+
+        return routeDto;
+    }
+
+    public static List<RouteDto> convertListOfRequestedRoutesToListRouteDto(List<RequestedRoute> list){
+        List<RouteDto> convertedList = new LinkedList<>();
+        for(RequestedRoute route : list){
+            convertedList.add(convertRequestedRouteToRouteDto(route));
+        }
+        return convertedList;
     }
 }

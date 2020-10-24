@@ -1,6 +1,7 @@
 package com.meni.server.model;
 
 import com.meni.server.repo.Ad;
+import com.meni.server.repo.User;
 import com.meni.server.repo.VolunteerRoute;
 import lombok.Getter;
 import lombok.Setter;

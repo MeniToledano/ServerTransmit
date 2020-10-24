@@ -1,7 +1,11 @@
 package com.meni.server.repo;
 
+import com.meni.server.model.AdDto;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @Entity
@@ -64,5 +68,26 @@ public class Ad implements Comparable<Ad>{
     public int compareTo(Ad ad) {
         LocalDateTime date = ad.getDate();
         return date.compareTo(this.date);
+    }
+
+    public static AdDto convertAdToAdDTO(Ad ad){
+        AdDto adDto = new AdDto();
+        adDto.setDate(ad.getDate());
+        adDto.setDescription(ad.getDescription());
+        adDto.setId(ad.getId());
+        adDto.setStatus(ad.getStatus());
+        adDto.setTitle(ad.getTitle());
+        adDto.setUser_id(ad.getUser().getId());
+        adDto.setUser(User.convertUserToUserDto(ad.getUser()));
+        adDto.setRoute(RequestedRoute.convertRequestedRouteToRouteDto(ad.getRoute()));
+        return adDto;
+    }
+
+    public static List<AdDto> convertListAdsToListAdsDto(List<Ad> ads){
+        List<AdDto> adsDTO = new LinkedList<>();
+        for (Ad ad : ads){
+            adsDTO.add(convertAdToAdDTO(ad));
+        }
+        return adsDTO;
     }
 }

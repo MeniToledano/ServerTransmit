@@ -1,9 +1,12 @@
 package com.meni.server.repo;
 
 import com.meni.server.model.RouteDto;
+import com.meni.server.model.UserDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "VolunteersRoutes")
@@ -40,7 +43,6 @@ public class VolunteerRoute implements Serializable {
         this.exitTime = rdt.getExitTime();
         this.arrivalTime = rdt.getArrivalTime();
     }
-
 
     public User getUser() {
         return user;
@@ -98,4 +100,28 @@ public class VolunteerRoute implements Serializable {
                 + arrivalTime + ' '
                 ;
     }
+
+    public static RouteDto convertVolunteerRouteToRouteDto(VolunteerRoute route) {
+        RouteDto routeDto = new RouteDto();
+
+        routeDto.setExitTime(route.getExitTime());
+        routeDto.setId(route.getId());
+        routeDto.setArrivalTime(route.getArrivalTime());
+        routeDto.setFromLocation(route.getFromLocation());
+        routeDto.setToLocation(route.getToLocation());
+
+        //routeDto.setUser(User.convertUserToUserDto(route.getUser()));
+
+        return routeDto;
+    }
+
+    public static List<RouteDto> convertListOfVolunteerRoutesToListRouteDto(List<VolunteerRoute> list){
+        List<RouteDto> convertedList = new LinkedList<>();
+        for(VolunteerRoute route : list){
+            convertedList.add(convertVolunteerRouteToRouteDto(route));
+        }
+        return convertedList;
+    }
+
+
 }

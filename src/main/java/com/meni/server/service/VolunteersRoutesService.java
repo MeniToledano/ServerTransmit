@@ -2,6 +2,7 @@ package com.meni.server.service;
 
 import com.meni.server.exception.RouteNotFoundException;
 import com.meni.server.model.RouteDto;
+import com.meni.server.model.UserDto;
 import com.meni.server.repo.User;
 import com.meni.server.repo.UserRepository;
 import com.meni.server.repo.VolunteerRoute;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -20,23 +22,29 @@ public class VolunteersRoutesService {
     @Autowired
     UserRepository userRepo;
 
-
-    public List<VolunteerRoute> add(long userID, RouteDto[] dto) {
-        List<VolunteerRoute> a = toEntity(userID, dto);
-        return a;
+    public List<RouteDto> add(long userID, RouteDto[] dto) {
+        return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(toEntity(userID, dto));
     }
 
     public void delete(long id) {
         repository.deleteById(id);
     }
 
-    public List<VolunteerRoute> getRoutes() {
-        return (List<VolunteerRoute>) repository.findAll();
+    public List<RouteDto> getRoutes() {
+        return convertVolunteerRoutesListToRouteDTOList((List<VolunteerRoute>) repository.findAll());
     }
 
-    public VolunteerRoute getAdById(long id) {
+    private List<RouteDto> convertVolunteerRoutesListToRouteDTOList(List<VolunteerRoute> list){
+        List<RouteDto> convertedList = new LinkedList<>();
+        for(VolunteerRoute route : list){
+            convertedList.add(VolunteerRoute.convertVolunteerRouteToRouteDto(route));
+        }
+        return convertedList;
+    }
+
+    public RouteDto getAdById(long id) {
         Optional<VolunteerRoute> optionalRoute = repository.findById(id);
-        return optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id));
+        return VolunteerRoute.convertVolunteerRouteToRouteDto(optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id)));
     }
 
     private List<VolunteerRoute> toEntity(long userID, RouteDto[] dto) {
@@ -44,18 +52,23 @@ public class VolunteersRoutesService {
         List<VolunteerRoute> listOfRoutes = new LinkedList<>();
         Optional<User> optionalUser = userRepo.findById(userID);
         User user = optionalUser.get();
+        repository.deleteAll();
         for(RouteDto r: dto) {
             VolunteerRoute entity = new VolunteerRoute(r);
             entity.setUser(user);
             repository.save(entity);
             listOfRoutes.add(entity);
         }
-
-
         user.addRoutes(listOfRoutes);
-
-
         return listOfRoutes;
     }
 
+    public Map<String, List<UserDto>> getUserByRoute_FromLocation(String fromLocation) {
+        List<VolunteerRoute> matchRoutes = repository.findByFromLocation(fromLocation);
+        List<User> matchUsers = new LinkedList<>();
+        for( VolunteerRoute vr : matchRoutes){
+            matchUsers.add(vr.getUser());
+        }
+        return Map.of("volunteer user data:",User.convertListUsersToListUsersDto(matchUsers));
+    }
 }

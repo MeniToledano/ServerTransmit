@@ -23,19 +23,18 @@ public class RequestedRoutesService {
         repository.deleteById(id);
     }
 
-    public List<RequestedRoute> getRoutes() {
-        return (List<RequestedRoute>) repository.findAll();
+    public List<RouteDto> getRoutes() {
+        return RequestedRoute.convertListOfRequestedRoutesToListRouteDto((List<RequestedRoute>) repository.findAll());
     }
 
-    public RequestedRoute getAdById(long id) {
+    public RouteDto getAdById(long id) {
         Optional<RequestedRoute> optionalRoute = repository.findById(id);
-        return optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id));
+        return RequestedRoute.convertRequestedRouteToRouteDto(optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id)));
     }
 
     private RequestedRoute toEntity(RouteDto dto) {
 
         RequestedRoute entity = new RequestedRoute(dto.getFromLocation(), dto.getToLocation(), dto.getExitTime(), dto.getArrivalTime());
-
 
         return entity;
     }

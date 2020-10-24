@@ -13,6 +13,7 @@ public class RouteDto {
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
-    private User user;
+    private UserDto user;
+    private AdDto ad;
 
 }
