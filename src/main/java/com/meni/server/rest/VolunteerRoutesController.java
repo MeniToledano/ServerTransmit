@@ -38,8 +38,8 @@ public class VolunteerRoutesController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(required = true) long id) {
-        routesService.delete(id);
+    public Map<String, List<RouteDto>> delete(@PathVariable(required = true) long id) {
+        return Map.of("User "+Long.toString(id)+" Remaining routes:", routesService.delete(id));
     }
 
 }

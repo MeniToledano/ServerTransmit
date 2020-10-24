@@ -4,8 +4,9 @@ import com.meni.server.exception.AdNotFoundException;
 import com.meni.server.exception.StatusNotValidException;
 import com.meni.server.model.AdDto;
 import com.meni.server.model.RouteDto;
-import com.meni.server.model.StatusDTO;
+import com.meni.server.model.Status;
 import com.meni.server.repo.*;
+import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,11 +75,25 @@ public class AdsService {
         return entity;
     }
 
-    public void updateStatus(long ad_id, StatusDTO status){
+    public void  updateStatus(long ad_id, String status) throws EnumConstantNotPresentException {
         Ad ad = getAdById(ad_id);
-        checkStatus(status.getStatus());
-        ad.setStatus(status.getStatus().toUpperCase());
+
+    switch (status){
+        case "MATCH_FOUND":
+            ad.setStatus(Status.MATCH_FOUND);
+            break;
+        case "RESOLVED":
+            ad.setStatus(Status.RESOLVED);
+            break;
+        case "PENDING":
+            ad.setStatus(Status.PENDING);
+            break;
+        default:
+            throw new EnumConstantNotPresentException(Status.class, status);
+
+    }
         adRepository.save(ad);
+
     }
 
     private void checkStatus(String status){

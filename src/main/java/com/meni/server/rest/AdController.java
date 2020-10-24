@@ -1,7 +1,9 @@
 package com.meni.server.rest;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.meni.server.model.AdDto;
-import com.meni.server.model.StatusDTO;
+import com.meni.server.model.Status;
+import com.meni.server.model.StatusStringDTO;
 import com.meni.server.service.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,9 +45,9 @@ public class AdController {
     public void delete(@PathVariable long ad_id,@PathVariable long id) { service.delete(ad_id);  }
 
     @PostMapping("/user/{id}/ads/{ad_id}/status")
-    public void postAdStatus(@RequestBody(required = true) StatusDTO status,
+        public void postAdStatus(@RequestBody StatusStringDTO status,
                            @PathVariable(required = true) long ad_id) {
-        service.updateStatus(ad_id, status);
+         service.updateStatus(ad_id, status.getStatus());
 
     }
 

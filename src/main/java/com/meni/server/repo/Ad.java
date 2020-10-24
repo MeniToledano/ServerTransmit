@@ -1,6 +1,7 @@
 package com.meni.server.repo;
 
 import com.meni.server.model.AdDto;
+import com.meni.server.model.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +26,10 @@ public class Ad implements Comparable<Ad>{
     private User user;
 
     private LocalDateTime date;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private String title;
     private String description;
 
@@ -34,7 +38,7 @@ public class Ad implements Comparable<Ad>{
     }
 
     public Ad() {
-        this.status = "PENDING";
+        this.status = Status.PENDING;
         this.date = LocalDateTime.now();
     }
 
@@ -58,9 +62,9 @@ public class Ad implements Comparable<Ad>{
 
     public String getDescription() { return description;  }
 
-    public String getStatus() { return status;  }
+    public String getStatus() { return status.name();  }
 
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(Status status) { this.status = status; }
 
     public void setDescription(String description) {  this.description = description; }
 

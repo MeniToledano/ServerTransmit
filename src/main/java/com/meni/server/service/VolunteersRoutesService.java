@@ -26,8 +26,15 @@ public class VolunteersRoutesService {
         return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(toEntity(userID, dto));
     }
 
-    public void delete(long id) {
+    public List<RouteDto> delete(long id) {
+        Optional<VolunteerRoute> optionalVolunteerRoute= repository.findById(id);
+        VolunteerRoute volunteerRoute = optionalVolunteerRoute.get();
+
+        User user = volunteerRoute.getUser();
+        List<VolunteerRoute> volunteerRoutes = user.getRoutes();
+        volunteerRoutes.remove(volunteerRoute);
         repository.deleteById(id);
+        return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(volunteerRoutes);
     }
 
     public List<RouteDto> getRoutes() {
