@@ -2,9 +2,12 @@ package com.meni.server.repo;
 
 import com.meni.server.model.RouteDto;
 import com.meni.server.model.UserDto;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +18,14 @@ public class VolunteerRoute implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "CreateTime")
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @Column(name = "LastModified")
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     private String fromLocation;
     private String toLocation;
@@ -28,6 +39,9 @@ public class VolunteerRoute implements Serializable {
 
     public VolunteerRoute() {
     }
+
+    public LocalDateTime getCreateDateTime() { return createDateTime; }
+    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
 
     public VolunteerRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
         this.fromLocation = fromLocation;
@@ -109,8 +123,6 @@ public class VolunteerRoute implements Serializable {
         routeDto.setArrivalTime(route.getArrivalTime());
         routeDto.setFromLocation(route.getFromLocation());
         routeDto.setToLocation(route.getToLocation());
-
-        //routeDto.setUser(User.convertUserToUserDto(route.getUser()));
 
         return routeDto;
     }

@@ -4,6 +4,8 @@ import com.meni.server.repo.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class RouteDto {
@@ -13,7 +15,5 @@ public class RouteDto {
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
-    private UserDto user;
-    private AdDto ad;
 
 }

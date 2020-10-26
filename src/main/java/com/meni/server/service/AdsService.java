@@ -8,8 +8,11 @@ import com.meni.server.model.Status;
 import com.meni.server.repo.*;
 import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -22,7 +25,11 @@ public class AdsService {
     VolunteersRoutsRepository volunteersRoutsRepository;
 
     public void delete(long id) {
-        adRepository.deleteById(id);
+        if(!adRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+
+        }
+                adRepository.deleteById(id);
     }
 
     public List<AdDto> getAds() {
@@ -34,6 +41,9 @@ public class AdsService {
         Ad updatedAd = adRepository.save(ad);
         AdDto adDto= Ad.convertAdToAdDTO(updatedAd);
         Optional<User> optionalUser = userRepository.findById(adDto.getUser_id());
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
         user.addAd(ad);
         userRepository.save(user);
@@ -43,9 +53,11 @@ public class AdsService {
 
     public List<AdDto> getUserAds(long id) {
         Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
-        List<AdDto> asd = Ad.convertListAdsToListAdsDto(user.getAds());
-        return asd;
+        return Ad.convertListAdsToListAdsDto(user.getAds());
     }
 
     public Ad getAdById(long id) {
@@ -64,8 +76,10 @@ public class AdsService {
                 routeDto.getExitTime(),
                 routeDto.getArrivalTime()));
         Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
-
         entity.setUser(user);
         entity.setDescription(dto.getDescription());
         entity.setTitle(dto.getTitle());
@@ -76,24 +90,26 @@ public class AdsService {
     }
 
     public void  updateStatus(long ad_id, String status) throws EnumConstantNotPresentException {
-        Ad ad = getAdById(ad_id);
+        try {
+            Ad ad = getAdById(ad_id);
+             switch (status){
+                 case "MATCH_FOUND":
+                     ad.setStatus(Status.MATCH_FOUND);
+                     break;
+                 case "RESOLVED":
+                     ad.setStatus(Status.RESOLVED);
+                     break;
+                 case "PENDING":
+                     ad.setStatus(Status.PENDING);
+                     break;
+                 default:
+                     throw new EnumConstantNotPresentException(Status.class, status);
 
-    switch (status){
-        case "MATCH_FOUND":
-            ad.setStatus(Status.MATCH_FOUND);
-            break;
-        case "RESOLVED":
-            ad.setStatus(Status.RESOLVED);
-            break;
-        case "PENDING":
-            ad.setStatus(Status.PENDING);
-            break;
-        default:
-            throw new EnumConstantNotPresentException(Status.class, status);
-
-    }
-        adRepository.save(ad);
-
+             }
+            adRepository.save(ad);
+        }catch (AdNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
     }
 
     private void checkStatus(String status){
@@ -110,9 +126,28 @@ public class AdsService {
 
     public List<AdDto> getSortedAds(String sort, int limit, long id) {
         Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
         List<Ad> list = user.getAds();
-        Collections.sort(list);
+
+        if(sort.toLowerCase().equals("desc")) {
+            Collections.sort(list,new Comparator < Ad > () {
+                @Override
+                public int compare(Ad ad1, Ad ad2) {
+                    return ad1.getUpdateDateTime().compareTo(ad2.getUpdateDateTime());
+                }
+            });
+        }else if (sort.toLowerCase().equals("asc")){
+            Collections.sort(list,new Comparator < Ad > () {
+                @Override
+                public int compare(Ad ad1, Ad ad2) {
+                    return ad2.getUpdateDateTime().compareTo(ad1.getUpdateDateTime());
+                }
+            });
+        }
+
         return Ad.convertListAdsToListAdsDto(list.subList(0, Math.min(list.size(), limit)));
 
     }

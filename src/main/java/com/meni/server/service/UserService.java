@@ -9,7 +9,9 @@ import com.meni.server.repo.User;
 import com.meni.server.repo.UserRepository;
 import com.meni.server.repo.VolunteerRoute;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +34,9 @@ public class UserService {
 
     public UserDto getUserById(long id) {
         Optional<User> optionalUser = repository.findById(id);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         return User.convertUserToUserDto(optionalUser.get());
     }
 
@@ -39,6 +44,9 @@ public class UserService {
 
     public UserDto update(long userId, UserDto userDto){
         Optional<User> optionalUser = repository.findById(userId);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
         updateUser(user ,userDto);
         return User.convertUserToUserDto(user);

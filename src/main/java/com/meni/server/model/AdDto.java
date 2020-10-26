@@ -15,6 +15,7 @@ public class AdDto {
     private String description;
     private RouteDto route;
     private UserDto user;
-    private LocalDateTime date;
+    private LocalDateTime createDateTime;
+    private LocalDateTime updateDateTime;
 
 }

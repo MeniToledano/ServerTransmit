@@ -2,8 +2,11 @@ package com.meni.server.repo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meni.server.model.UserDto;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,6 +19,14 @@ public class User{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "UserId")
     private long id;
+
+    @Column(name = "CreateTime")
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @Column(name = "LastModified")
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     private String name;
     private String lastName;
@@ -42,6 +53,9 @@ public class User{
         this.phone = phone;
         this.eMail = eMail;
     }
+
+    public LocalDateTime getCreateDateTime() { return createDateTime; }
+    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
 
     public void addRoutes(List<VolunteerRoute> listOfRoutes){
         for(VolunteerRoute route : listOfRoutes) {
@@ -102,12 +116,6 @@ public class User{
         userDto.setPhone(user.getPhone());
         userDto.setUserId(user.getId());
 
-//        if(user.getAds() != null) {
-//            userDto.setAds(Ad.convertListAdsToListAdsDto(user.getAds()));
-//        }
-//        if(user.getRoutes() != null) {
-//            userDto.setRoutes(VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(user.getRoutes()));
-//        }
         return userDto;
     }
 

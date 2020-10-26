@@ -2,6 +2,8 @@ package com.meni.server.repo;
 
 import com.meni.server.model.AdDto;
 import com.meni.server.model.Status;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Ads")
-public class Ad implements Comparable<Ad>{
+public class Ad{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,13 @@ public class Ad implements Comparable<Ad>{
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
 
-    private LocalDateTime date;
+    @Column(name = "CreateTime")
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @Column(name = "LastModified")
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -39,10 +47,10 @@ public class Ad implements Comparable<Ad>{
 
     public Ad() {
         this.status = Status.PENDING;
-        this.date = LocalDateTime.now();
     }
 
-    public LocalDateTime getDate() { return date; }
+    public LocalDateTime getCreateDateTime() { return createDateTime; }
+    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
 
     public RequestedRoute getRoute() { return route; }
 
@@ -68,15 +76,13 @@ public class Ad implements Comparable<Ad>{
 
     public void setDescription(String description) {  this.description = description; }
 
-    @Override
-    public int compareTo(Ad ad) {
-        LocalDateTime date = ad.getDate();
-        return date.compareTo(this.date);
-    }
-
     public static AdDto convertAdToAdDTO(Ad ad){
         AdDto adDto = new AdDto();
-        adDto.setDate(ad.getDate());
+
+        adDto.setCreateDateTime(ad.getCreateDateTime());
+        if (ad.getUpdateDateTime() != null) {
+            adDto.setUpdateDateTime(ad.getUpdateDateTime());
+        }
         adDto.setDescription(ad.getDescription());
         adDto.setId(ad.getId());
         adDto.setStatus(ad.getStatus());

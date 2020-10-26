@@ -1,8 +1,11 @@
 package com.meni.server.repo;
 
 import com.meni.server.model.RouteDto;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +21,14 @@ public class RequestedRoute {
     private String toLocation;
     private String exitTime;
     private String arrivalTime;
+    @Column(name = "CreateTime")
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @Column(name = "LastModified")
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
 
     public Ad getAd() {
         return ad;
@@ -36,6 +47,9 @@ public class RequestedRoute {
 
     public RequestedRoute() {
     }
+
+    public LocalDateTime getCreateDateTime() { return createDateTime; }
+    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
 
     public String getFromLocation() {
         return fromLocation;
@@ -100,8 +114,6 @@ public class RequestedRoute {
         routeDto.setArrivalTime(route.getArrivalTime());
         routeDto.setFromLocation(route.getFromLocation());
         routeDto.setToLocation(route.getToLocation());
-
-    //    routeDto.setAd(Ad.convertAdToAdDTO(route.getAd()));
 
         return routeDto;
     }

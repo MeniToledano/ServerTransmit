@@ -8,7 +8,9 @@ import com.meni.server.repo.UserRepository;
 import com.meni.server.repo.VolunteerRoute;
 import com.meni.server.repo.VolunteersRoutsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +30,9 @@ public class VolunteersRoutesService {
 
     public List<RouteDto> delete(long id) {
         Optional<VolunteerRoute> optionalVolunteerRoute= repository.findById(id);
+        if(optionalVolunteerRoute.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         VolunteerRoute volunteerRoute = optionalVolunteerRoute.get();
 
         User user = volunteerRoute.getUser();
@@ -37,8 +42,14 @@ public class VolunteersRoutesService {
         return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(volunteerRoutes);
     }
 
-    public List<RouteDto> getRoutes() {
-        return convertVolunteerRoutesListToRouteDTOList((List<VolunteerRoute>) repository.findAll());
+    public List<RouteDto> getRoutes(long userId) {
+        Optional<User> optionalUser = userRepo.findById(userId);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
+        User user = optionalUser.get();
+
+        return convertVolunteerRoutesListToRouteDTOList(user.getRoutes());
     }
 
     private List<RouteDto> convertVolunteerRoutesListToRouteDTOList(List<VolunteerRoute> list){
@@ -58,6 +69,9 @@ public class VolunteersRoutesService {
 
         List<VolunteerRoute> listOfRoutes = new LinkedList<>();
         Optional<User> optionalUser = userRepo.findById(userID);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
         User user = optionalUser.get();
         repository.deleteAll();
         for(RouteDto r: dto) {

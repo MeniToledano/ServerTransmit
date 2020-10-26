@@ -6,10 +6,13 @@ import com.meni.server.model.Status;
 import com.meni.server.model.StatusStringDTO;
 import com.meni.server.service.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -25,16 +28,30 @@ public class AdController {
     @PostMapping("/ads")
     public AdDto postAd(@RequestBody AdDto dto) { return service.add(dto); }
 
-    @GetMapping(value = "/user/{id}/ads")
-    public Map<String,List<AdDto>> getAdsByUserId(@PathVariable(required = true) long id) {
-        return Map.of("Ads", service.getUserAds(id));
-    }
+//    @GetMapping(value = "/user/{id}/ads")
+//    public Map<String,List<AdDto>> getAdsByUserId(@PathVariable(required = true) long id) {
+//        return Map.of("Ads", service.getUserAds(id));
+//    }
 
-    @GetMapping(value = "/user/{id}/ads", params = {"sort","limit"})
-    public Map<String,List<AdDto>> getSortedAds(@RequestParam(value = "sort",required = false) String sort,
-                                    @RequestParam(value = "limit",required = false) int limit,
-                            @PathVariable(required = true) long id) {
-        return Map.of("Ads", service.getSortedAds(sort, limit, id));
+    @GetMapping(value = "/user/{id}/ads")
+    public Map<String,List<AdDto>> getSortedAds(@RequestParam(required = false) String sort,
+                                                @RequestParam(required = false) String limit,
+                                                @PathVariable(required = true) long id) {
+        if (sort != null){
+            if(!sort.equals("desc") && !sort.equals("asc")){
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY ,"sort not supported");
+            }
+        }
+        if(sort==null && limit==null) {
+            return Map.of("Ads", service.getUserAds(id));
+        } else if(sort==null && limit!=null){
+            return Map.of("Ads", service.getSortedAds("desc", Integer.parseInt(limit), id));
+        } else if(sort!=null && limit==null){
+            return Map.of("Ads", service.getSortedAds(sort, 10, id));
+        }else{
+            return Map.of("Ads", service.getSortedAds(sort, Integer.parseInt(limit), id));
+        }
+
     }
 
 
@@ -48,12 +65,11 @@ public class AdController {
         public void postAdStatus(@RequestBody StatusStringDTO status,
                            @PathVariable(required = true) long ad_id) {
          service.updateStatus(ad_id, status.getStatus());
-
     }
 
     @GetMapping("/job/match")
     public Map<String,Map<String,String>> findAllMatches(){
-        return Map.of("All matches:", service.matchRequestedRoutesWithVolunteerRoutes());
+        return Map.of("matches:", service.matchRequestedRoutesWithVolunteerRoutes());
     }
 
 }

@@ -18,13 +18,13 @@ public class VolunteerRoutesController {
     VolunteersRoutesService routesService;
 
     @GetMapping
-    public Map<String, List<RouteDto>> getRoutes() {
-        return Map.of("routes",routesService.getRoutes());
+    public Map<String, List<RouteDto>> getRoutes(@PathVariable("id") long userId) {
+        return Map.of("routes",routesService.getRoutes(userId));
     }
 
     @PostMapping
-    public Map<String, List<RouteDto>> postUserRoutes(@PathVariable("id") long userID , @RequestBody RouteDto[] routes) {
-        return Map.of("routes",routesService.add(userID, routes));
+    public Map<String, List<RouteDto>> postUserRoutes(@PathVariable("id") long userId , @RequestBody RouteDto[] routes) {
+        return Map.of("routes",routesService.add(userId, routes));
     }
 
     @GetMapping("/fromLocation:{fromLocation}")
@@ -39,7 +39,7 @@ public class VolunteerRoutesController {
 
     @DeleteMapping("/{id}")
     public Map<String, List<RouteDto>> delete(@PathVariable(required = true) long id) {
-        return Map.of("User "+Long.toString(id)+" Remaining routes:", routesService.delete(id));
+        return Map.of("routes:", routesService.delete(id));
     }
 
 }
