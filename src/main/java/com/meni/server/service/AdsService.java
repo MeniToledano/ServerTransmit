@@ -27,7 +27,6 @@ public class AdsService {
     public void delete(long id) {
         if(!adRepository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-
         }
                 adRepository.deleteById(id);
     }
@@ -40,11 +39,7 @@ public class AdsService {
         Ad ad = toEntity(dto);
         Ad updatedAd = adRepository.save(ad);
         AdDto adDto= Ad.convertAdToAdDTO(updatedAd);
-        Optional<User> optionalUser = userRepository.findById(adDto.getUser_id());
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        User user = optionalUser.get();
+        User user = handleUser(adDto.getUser_id());//checks if user exist
         user.addAd(ad);
         userRepository.save(user);
         return adDto;
@@ -68,24 +63,28 @@ public class AdsService {
     private Ad toEntity(AdDto dto) {
 
         Ad entity = new Ad();
+
         long userId = dto.getUser_id();
-        RouteDto routeDto = dto.getRoute();
-        entity.setRoute(new RequestedRoute(
-                routeDto.getFromLocation(),
-                routeDto.getToLocation(),
-                routeDto.getExitTime(),
-                routeDto.getArrivalTime()));
+        entity.setRoute(toRequestedRoute(dto.getRoute()));
+        entity.setDescription(dto.getDescription().toLowerCase());
+        entity.setTitle(dto.getTitle().toLowerCase());
+
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
         }
+
         User user = optionalUser.get();
         entity.setUser(user);
-        entity.setDescription(dto.getDescription());
-        entity.setTitle(dto.getTitle());
+        return entity;
+    }
 
-     //   user.addAd(entity);
-     //   userRepository.save(user); //here is the problem
+    private RequestedRoute toRequestedRoute(RouteDto dto) {
+        RequestedRoute entity = new RequestedRoute();
+        entity.setFromLocation(dto.getFromLocation());
+        entity.setToLocation(dto.getToLocation());
+        entity.setExitTime(dto.getExitTime());
+        entity.setArrivalTime(dto.getArrivalTime());
         return entity;
     }
 
@@ -112,24 +111,9 @@ public class AdsService {
         }
     }
 
-    private void checkStatus(String status){
-        String lowerStatus = status.toLowerCase();
-        List<String> validStatus = new LinkedList<>();
-        validStatus.add("resolved");
-        validStatus.add("match-found");
-        validStatus.add("pending");
-        if(!validStatus.contains(lowerStatus)){
-            throw new StatusNotValidException();
-        }
-
-    }
-
     public List<AdDto> getSortedAds(String sort, int limit, long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        User user = optionalUser.get();
+
+        User user = handleUser(id); //checks if user exist
         List<Ad> list = user.getAds();
 
         if(sort.toLowerCase().equals("desc")) {
@@ -152,12 +136,22 @@ public class AdsService {
 
     }
 
+    private User handleUser(long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
+        return optionalUser.get();
+    }
+
     public void matchRequestedRoutesWithVolunteerRoutes() {
         List<Ad> allAds = (List<Ad>) adRepository.findAll();
 
         for (Ad ad : allAds) {
             RequestedRoute requestedRoutes = ad.getRoute();
-            List<VolunteerRoute> matchRoutes = volunteersRoutsRepository.findByFromLocation(requestedRoutes.getFromLocation());
+            List<VolunteerRoute> matchRoutes = volunteersRoutsRepository.findByFromLocationAndToLocation(
+                    requestedRoutes.getFromLocation(),
+                    requestedRoutes.getToLocation());
             if (matchRoutes != null) {
                 for (VolunteerRoute volunteerRoute: matchRoutes){
                     if (ad.getStatus().equals(Status.PENDING.toString())) {

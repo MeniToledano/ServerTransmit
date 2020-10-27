@@ -28,11 +28,6 @@ public class AdController {
     @PostMapping("/ads")
     public AdDto postAd(@RequestBody AdDto dto) { return service.add(dto); }
 
-//    @GetMapping(value = "/user/{id}/ads")
-//    public Map<String,List<AdDto>> getAdsByUserId(@PathVariable(required = true) long id) {
-//        return Map.of("Ads", service.getUserAds(id));
-//    }
-
     @GetMapping(value = "/user/{id}/ads")
     public Map<String,List<AdDto>> getSortedAds(@RequestParam(required = false) String sort,
                                                 @RequestParam(required = false) String limit,

@@ -20,76 +20,82 @@ import java.util.Optional;
 @Component
 public class VolunteersRoutesService {
     @Autowired
-    VolunteersRoutsRepository repository;
+    VolunteersRoutsRepository volunteerRoutesRepository;
     @Autowired
-    UserRepository userRepo;
+    UserRepository userRepository;
 
     public List<RouteDto> add(long userID, RouteDto[] dto) {
         return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(toEntity(userID, dto));
     }
 
     public List<RouteDto> delete(long id) {
-        Optional<VolunteerRoute> optionalVolunteerRoute= repository.findById(id);
-        if(optionalVolunteerRoute.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        VolunteerRoute volunteerRoute = optionalVolunteerRoute.get();
+        VolunteerRoute volunteerRoute = handleVolunteerRoutes(id);
 
         User user = volunteerRoute.getUser();
         List<VolunteerRoute> volunteerRoutes = user.getRoutes();
         volunteerRoutes.remove(volunteerRoute);
-        repository.deleteById(id);
+        volunteerRoutesRepository.deleteById(id);
         return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(volunteerRoutes);
     }
 
-    public List<RouteDto> getRoutes(long userId) {
-        Optional<User> optionalUser = userRepo.findById(userId);
-        if(optionalUser.isEmpty()){
+    private VolunteerRoute handleVolunteerRoutes(long id) {
+        Optional<VolunteerRoute> optionalVolunteerRoute= volunteerRoutesRepository.findById(id);
+        if(optionalVolunteerRoute.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
         }
-        User user = optionalUser.get();
-
-        return convertVolunteerRoutesListToRouteDTOList(user.getRoutes());
+        return optionalVolunteerRoute.get();
     }
 
-    private List<RouteDto> convertVolunteerRoutesListToRouteDTOList(List<VolunteerRoute> list){
-        List<RouteDto> convertedList = new LinkedList<>();
-        for(VolunteerRoute route : list){
-            convertedList.add(VolunteerRoute.convertVolunteerRouteToRouteDto(route));
-        }
-        return convertedList;
+    public List<RouteDto> getRoutes(long userId) {
+        User user = handleUser(userId);
+        return VolunteerRoute.convertListOfVolunteerRoutesToListRouteDto(user.getRoutes());
     }
 
     public RouteDto getAdById(long id) {
-        Optional<VolunteerRoute> optionalRoute = repository.findById(id);
+        Optional<VolunteerRoute> optionalRoute = volunteerRoutesRepository.findById(id);
         return VolunteerRoute.convertVolunteerRouteToRouteDto(optionalRoute.orElseThrow(() -> new RouteNotFoundException("Couldn't find a Route with id: " + id)));
     }
 
+    //all new router associated with the user will be REPLACED!
     private List<VolunteerRoute> toEntity(long userID, RouteDto[] dto) {
 
         List<VolunteerRoute> listOfRoutes = new LinkedList<>();
-        Optional<User> optionalUser = userRepo.findById(userID);
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        User user = optionalUser.get();
-        repository.deleteAll();
-        for(RouteDto r: dto) {
-            VolunteerRoute entity = new VolunteerRoute(r);
-            entity.setUser(user);
-            repository.save(entity);
+        User user =handleUser(userID); //checks if user exist
+        volunteerRoutesRepository.deleteByUser(user); //delete user routes
+
+        for(RouteDto routeDto: dto) {
+            VolunteerRoute entity = toVolunteerRoute(routeDto);
+            entity.setUser(user); //associate each route with user
+            volunteerRoutesRepository.save(entity);
             listOfRoutes.add(entity);
         }
-        user.addRoutes(listOfRoutes);
+        user.addRoutes(listOfRoutes); //maybe this line does nothing
         return listOfRoutes;
     }
 
-    public Map<String, List<UserDto>> getUserByRoute_FromLocation(String fromLocation) {
-        List<VolunteerRoute> matchRoutes = repository.findByFromLocation(fromLocation);
+    private User handleUser(long userID) {
+        Optional<User> optionalUser = userRepository.findById(userID);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
+        return optionalUser.get();
+    }
+
+    private VolunteerRoute toVolunteerRoute(RouteDto routeDto) {
+        VolunteerRoute volunteerRoute = new VolunteerRoute();
+        volunteerRoute.setFromLocation(routeDto.getFromLocation().toLowerCase());
+        volunteerRoute.setToLocation(routeDto.getToLocation().toLowerCase());
+        volunteerRoute.setExitTime(routeDto.getExitTime().toLowerCase());
+        volunteerRoute.setArrivalTime(routeDto.getArrivalTime().toLowerCase());
+        return volunteerRoute;
+    }
+
+    public Map<String, List<UserDto>> getUserByRoute_FromLocationAndToLocation(String fromLocation, String toLocation) {
+        List<VolunteerRoute> matchRoutes = volunteerRoutesRepository.findByFromLocationAndToLocation(fromLocation, toLocation);
         List<User> matchUsers = new LinkedList<>();
         for( VolunteerRoute vr : matchRoutes){
             matchUsers.add(vr.getUser());
         }
-        return Map.of("volunteer user data:",User.convertListUsersToListUsersDto(matchUsers));
+        return Map.of("volunteers:",User.convertListUsersToListUsersDto(matchUsers));
     }
 }

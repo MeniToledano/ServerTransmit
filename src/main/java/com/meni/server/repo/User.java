@@ -1,7 +1,8 @@
 package com.meni.server.repo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meni.server.model.UserDto;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,10 +11,11 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Users")
 public class User{
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,10 +38,6 @@ public class User{
     private String phone;
     private String eMail;
 
-    public List<VolunteerRoute> getRoutes() {
-        return routes;
-    }
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<VolunteerRoute> routes;
 
@@ -50,65 +48,13 @@ public class User{
         routes = new LinkedList<>();
     }
 
-    public User(String name, String lastName, String phone, String eMail) {
-        this.name = name;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.eMail = eMail;
-    }
-
-    public LocalDateTime getCreateDateTime() { return createDateTime; }
-    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
-
     public void addRoutes(List<VolunteerRoute> listOfRoutes){
         for(VolunteerRoute route : listOfRoutes) {
             routes.add(route);
         }
     }
 
-    public void addAd(Ad ad){
-        this.ads.add(ad);
-    }
-
-    public List<Ad> getAds(){
-      return this.ads;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEMail() {
-        return eMail;
-    }
-
-    public void setEMail(String eMail) {
-        this.eMail = eMail;
-    }
-
-    public long getId() {
-        return id;
-    }
+    public void addAd(Ad ad){ this.ads.add(ad); }
 
     public static UserDto convertUserToUserDto(User user){
         if(user == null){return null;}

@@ -2,12 +2,10 @@ package com.meni.server.rest;
 
 import com.meni.server.model.RouteDto;
 import com.meni.server.model.UserDto;
-import com.meni.server.repo.VolunteerRoute;
 import com.meni.server.service.VolunteersRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +25,10 @@ public class VolunteerRoutesController {
         return Map.of("routes",routesService.add(userId, routes));
     }
 
-    @GetMapping("/fromLocation:{fromLocation}")
-    public Map<String, List<UserDto>> getByFromLocation(@PathVariable(required = true) String fromLocation) {
-        return routesService.getUserByRoute_FromLocation(fromLocation);
+    @GetMapping("/fromLocation:{fromLocation}/toLocation:{toLocation}")
+    public Map<String, List<UserDto>> getByFromLocation(@PathVariable(required = true) String fromLocation
+    ,@PathVariable(required = true) String toLocation) {
+        return routesService.getUserByRoute_FromLocationAndToLocation(fromLocation,toLocation);
     }
 
     @GetMapping("/{id}")

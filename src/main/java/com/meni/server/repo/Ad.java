@@ -3,6 +3,8 @@ package com.meni.server.repo;
 import com.meni.server.model.AdDto;
 import com.meni.server.model.Status;
 import com.sun.istack.Nullable;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "Ads")
 public class Ad{
@@ -19,7 +22,6 @@ public class Ad{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
@@ -40,58 +42,17 @@ public class Ad{
     @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
     private RequestedRoute route;
 
-
     @OneToOne
     @Nullable
     @JoinColumn(name = "volunteer_id", referencedColumnName = "userId")
     private User volunteerData;
 
-
     private String title;
     private String description;
-
-    public Ad(User user) {
-        this.user = user;
-    }
 
     public Ad() {
         this.status = Status.PENDING;
     }
-
-
-    public User getVolunteerData() {
-        return volunteerData;
-    }
-
-    public void setVolunteerData(User volunteerData) {
-        this.volunteerData = volunteerData;
-    }
-    public LocalDateTime getCreateDateTime() { return createDateTime; }
-    public LocalDateTime getUpdateDateTime() { return updateDateTime; }
-
-    public RequestedRoute getRoute() { return route; }
-
-    public void setRoute(RequestedRoute route) { this.route = route; }
-
-    public User getUser() { return user; }
-
-    public void setUser(User user) { this.user = user; }
-
-    public Long getId() { return id; }
-
-    public void setId(long id) { this.id = id; }
-
-    public String getTitle() { return title;  }
-
-    public void setTitle(String title) { this.title = title;  }
-
-    public String getDescription() { return description;  }
-
-    public String getStatus() { return status.name();  }
-
-    public void setStatus(Status status) { this.status = status; }
-
-    public void setDescription(String description) {  this.description = description; }
 
     public static AdDto convertAdToAdDTO(Ad ad){
         AdDto adDto = new AdDto();
@@ -102,7 +63,7 @@ public class Ad{
         }
         adDto.setDescription(ad.getDescription());
         adDto.setId(ad.getId());
-        adDto.setStatus(ad.getStatus());
+        adDto.setStatus(ad.getStatus().toString());
         adDto.setTitle(ad.getTitle());
         adDto.setUser_id(ad.getUser().getId());
         adDto.setUser(User.convertUserToUserDto(ad.getUser()));

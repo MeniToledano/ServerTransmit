@@ -1,53 +1,47 @@
 package com.meni.server.service;
 
-import com.meni.server.exception.UserNotFoundException;
-import com.meni.server.model.AdDto;
-import com.meni.server.model.RouteDto;
 import com.meni.server.model.UserDto;
-import com.meni.server.repo.Ad;
 import com.meni.server.repo.User;
 import com.meni.server.repo.UserRepository;
-import com.meni.server.repo.VolunteerRoute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class UserService {
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
 
-    public UserDto add(UserDto dto) { return User.convertUserToUserDto(repository.save(toEntity(dto)));  }
+    public UserDto add(UserDto dto) { return User.convertUserToUserDto(userRepository.save(toEntity(dto)));  }
 
     public void delete(long id) {
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     public List<UserDto> getUsers() {
-        return User.convertListUsersToListUsersDto((List<User>) repository.findAll());
+        return User.convertListUsersToListUsersDto((List<User>) userRepository.findAll());
     }
 
     public UserDto getUserById(long id) {
-        Optional<User> optionalUser = repository.findById(id);
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        return User.convertUserToUserDto(optionalUser.get());
+        User user = handleUser(id);
+        return User.convertUserToUserDto(user);
     }
 
-    private User toEntity(UserDto userDto) { return new User(userDto.getName(), userDto.getLastName(), userDto.getPhone(), userDto.getEmail()); }
+    private User toEntity(UserDto userDto) {
+        User entity= new User();
+        entity.setName(userDto.getName());
+        entity.setLastName(userDto.getLastName());
+        entity.setPhone(userDto.getPhone());
+        entity.setEMail(userDto.getEmail());
+        return entity;
+    }
 
     public UserDto update(long userId, UserDto userDto){
-        Optional<User> optionalUser = repository.findById(userId);
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
-        }
-        User user = optionalUser.get();
+        User user = handleUser(userId);
         updateUser(user ,userDto);
         return User.convertUserToUserDto(user);
     }
@@ -57,7 +51,15 @@ public class UserService {
         if(userDto.getLastName() != null){user.setLastName(userDto.getLastName()) ;}
         if(userDto.getName() != null){ user.setName(userDto.getName()) ;}
         if(userDto.getPhone() != null){user.setPhone(user.getPhone()) ;}
-        repository.save(user);
+        userRepository.save(user);
+    }
+
+    private User handleUser(long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
+        return optionalUser.get();
     }
 
 
