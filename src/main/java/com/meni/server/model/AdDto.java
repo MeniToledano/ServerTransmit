@@ -17,5 +17,6 @@ public class AdDto {
     private UserDto user;
     private LocalDateTime createDateTime;
     private LocalDateTime updateDateTime;
+    private UserDto volunteerData;
 
 }

@@ -68,8 +68,8 @@ public class AdController {
     }
 
     @GetMapping("/job/match")
-    public Map<String,Map<String,String>> findAllMatches(){
-        return Map.of("matches:", service.matchRequestedRoutesWithVolunteerRoutes());
+    public void findAllMatches(){
+        service.matchRequestedRoutesWithVolunteerRoutes();
     }
 
 }

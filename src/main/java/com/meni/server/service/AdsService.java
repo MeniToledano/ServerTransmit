@@ -152,20 +152,21 @@ public class AdsService {
 
     }
 
-    public Map<String,String> matchRequestedRoutesWithVolunteerRoutes() {
+    public void matchRequestedRoutesWithVolunteerRoutes() {
         List<Ad> allAds = (List<Ad>) adRepository.findAll();
-        List<VolunteerRoute> volunteerRoutes = (List<VolunteerRoute>) volunteersRoutsRepository.findAll();
-        HashMap<String, String> matches = new HashMap<>();
 
         for (Ad ad : allAds) {
             RequestedRoute requestedRoutes = ad.getRoute();
             List<VolunteerRoute> matchRoutes = volunteersRoutsRepository.findByFromLocation(requestedRoutes.getFromLocation());
             if (matchRoutes != null) {
                 for (VolunteerRoute volunteerRoute: matchRoutes){
-                    matches.put("Ad id: "+ad.getId().toString(), "Volunteer user id: "+Long.toString(volunteerRoute.getId()));
+                    if (ad.getStatus().equals(Status.PENDING.toString())) {
+                        ad.setVolunteerData(volunteerRoute.getUser());
+                        ad.setStatus(Status.MATCH_FOUND);
+                        adRepository.save(ad);
+                    }
                 }
             }
         }
-        return matches;
     }
 }

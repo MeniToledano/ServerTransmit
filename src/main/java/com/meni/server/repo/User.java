@@ -20,6 +20,9 @@ public class User{
     @Column(name = "UserId")
     private long id;
 
+    @OneToOne(mappedBy = "volunteerData")
+    private Ad ad;
+
     @Column(name = "CreateTime")
     @CreationTimestamp
     private LocalDateTime createDateTime;

@@ -29,13 +29,14 @@ public class RequestedRoute {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
+    @OneToOne(mappedBy = "route")
+    private Ad ad;
 
     public Ad getAd() {
         return ad;
     }
 
-    @OneToOne(mappedBy = "route")
-    private Ad ad;
+
 
     public RequestedRoute(String fromLocation, String toLocation, String exitTime, String arrivalTime) {
         this.fromLocation = fromLocation;

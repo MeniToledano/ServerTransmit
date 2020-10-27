@@ -2,6 +2,7 @@ package com.meni.server.repo;
 
 import com.meni.server.model.AdDto;
 import com.meni.server.model.Status;
+import com.sun.istack.Nullable;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,9 +20,6 @@ public class Ad{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
-    private RequestedRoute route;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
@@ -38,6 +36,17 @@ public class Ad{
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
+    private RequestedRoute route;
+
+
+    @OneToOne
+    @Nullable
+    @JoinColumn(name = "volunteer_id", referencedColumnName = "userId")
+    private User volunteerData;
+
+
     private String title;
     private String description;
 
@@ -49,6 +58,14 @@ public class Ad{
         this.status = Status.PENDING;
     }
 
+
+    public User getVolunteerData() {
+        return volunteerData;
+    }
+
+    public void setVolunteerData(User volunteerData) {
+        this.volunteerData = volunteerData;
+    }
     public LocalDateTime getCreateDateTime() { return createDateTime; }
     public LocalDateTime getUpdateDateTime() { return updateDateTime; }
 
@@ -90,6 +107,7 @@ public class Ad{
         adDto.setUser_id(ad.getUser().getId());
         adDto.setUser(User.convertUserToUserDto(ad.getUser()));
         adDto.setRoute(RequestedRoute.convertRequestedRouteToRouteDto(ad.getRoute()));
+        adDto.setVolunteerData(User.convertUserToUserDto(ad.getVolunteerData()));
         return adDto;
     }
 
