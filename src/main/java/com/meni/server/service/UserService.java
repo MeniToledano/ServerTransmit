@@ -3,11 +3,13 @@ package com.meni.server.service;
 import com.meni.server.model.UserDto;
 import com.meni.server.repo.User;
 import com.meni.server.repo.UserRepository;
+import javassist.bytecode.DuplicateMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public UserDto add(UserDto dto) { return User.convertUserToUserDto(userRepository.save(toEntity(dto)));  }
+    public UserDto add(UserDto dto){ return User.convertUserToUserDto(userRepository.save(toEntity(dto)));  }
 
     public void delete(long id) {
         userRepository.deleteById(id);
@@ -33,10 +35,12 @@ public class UserService {
 
     private User toEntity(UserDto userDto) {
         User entity= new User();
-        entity.setName(userDto.getName());
+        entity.setName(userDto.getFirstName());
         entity.setLastName(userDto.getLastName());
         entity.setPhone(userDto.getPhone());
         entity.setEMail(userDto.getEmail());
+        entity.setUserName(userDto.getUserName());
+        entity.setPassword(userDto.getPassword());
         return entity;
     }
 
@@ -49,7 +53,7 @@ public class UserService {
     private void updateUser(User user, UserDto userDto) {
         if(userDto.getEmail() != null){ user.setEMail(userDto.getEmail()); }
         if(userDto.getLastName() != null){user.setLastName(userDto.getLastName()) ;}
-        if(userDto.getName() != null){ user.setName(userDto.getName()) ;}
+        if(userDto.getFirstName() != null){ user.setName(userDto.getFirstName()) ;}
         if(userDto.getPhone() != null){user.setPhone(user.getPhone()) ;}
         userRepository.save(user);
     }
@@ -62,5 +66,11 @@ public class UserService {
         return optionalUser.get();
     }
 
-
+    public UserDto getUserByLogin(UserDto dto) {
+        Optional<User> optionalUser = Optional.ofNullable(userRepository.findByUserNameAndPassword(dto.getUserName(), dto.getPassword()));
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        }
+        return  User.convertUserToUserDto(optionalUser.get());
+    }
 }

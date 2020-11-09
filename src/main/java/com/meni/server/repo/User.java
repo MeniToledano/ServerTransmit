@@ -36,6 +36,9 @@ public class User{
     private String name;
     private String lastName;
     private String phone;
+    @Column(name = "UserName", unique = true)
+    private String userName;
+    private String password;
     private String eMail;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -61,9 +64,11 @@ public class User{
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEMail());
         userDto.setLastName(user.getLastName());
-        userDto.setName(user.getName());
+        userDto.setFirstName(user.getName());
         userDto.setPhone(user.getPhone());
         userDto.setUserId(user.getId());
+        userDto.setPassword(user.getPassword());
+        userDto.setUserName(user.getUserName());
 
         return userDto;
     }
