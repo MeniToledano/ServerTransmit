@@ -26,7 +26,10 @@ public class AdController {
     }
 
     @PostMapping("/ads")
-    public AdDto postAd(@RequestBody AdDto dto) { return service.add(dto); }
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public AdDto postAd(@RequestBody AdDto dto) {
+        return service.add(dto);
+    }
 
     @GetMapping(value = "/user/{id}/ads")
     public Map<String,List<AdDto>> getSortedAds(@RequestParam(required = false) String sort,
@@ -51,10 +54,12 @@ public class AdController {
 
 
     @GetMapping("/user/id/ads/{ad_id}")
-    public void delete(@PathVariable long ad_id) { service.getAdById(ad_id);  }
+    public void delete(@PathVariable long ad_id) {
+        service.getAdById(ad_id);  }
 
     @DeleteMapping("/user/{id}/ads/{ad_id}")
-    public void delete(@PathVariable long ad_id,@PathVariable long id) { service.delete(ad_id);  }
+    public void delete(@PathVariable long ad_id,@PathVariable long id) {
+        service.delete(ad_id);  }
 
     @PostMapping("/user/{id}/ads/{ad_id}/status")
         public void postAdStatus(@RequestBody StatusStringDTO status,

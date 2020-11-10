@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class AdDto {
-    private long id;
-    private long user_id;
+    private long adId;
+    private long userId;
     private String status;
     private String title;
     private String description;

@@ -43,7 +43,7 @@ public class RequestedRoute {
         RouteDto routeDto = new RouteDto();
 
         routeDto.setExitTime(route.getExitTime());
-        routeDto.setId(route.getRequestedRouteId());
+        routeDto.setRouteId(route.getRequestedRouteId());
         routeDto.setArrivalTime(route.getArrivalTime());
         routeDto.setFromLocation(route.getFromLocation());
         routeDto.setToLocation(route.getToLocation());

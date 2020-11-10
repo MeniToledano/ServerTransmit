@@ -62,10 +62,10 @@ public class Ad{
             adDto.setUpdateDateTime(ad.getUpdateDateTime());
         }
         adDto.setDescription(ad.getDescription());
-        adDto.setId(ad.getId());
+        adDto.setAdId(ad.getId());
         adDto.setStatus(ad.getStatus().toString());
         adDto.setTitle(ad.getTitle());
-        adDto.setUser_id(ad.getUser().getId());
+        adDto.setUserId(ad.getUser().getId());
         adDto.setUser(User.convertUserToUserDto(ad.getUser()));
         adDto.setRoute(RequestedRoute.convertRequestedRouteToRouteDto(ad.getRoute()));
         adDto.setVolunteerData(User.convertUserToUserDto(ad.getVolunteerData()));

@@ -46,7 +46,7 @@ public class VolunteerRoute implements Serializable {
         RouteDto routeDto = new RouteDto();
 
         routeDto.setExitTime(route.getExitTime());
-        routeDto.setId(route.getId());
+        routeDto.setRouteId(route.getId());
         routeDto.setArrivalTime(route.getArrivalTime());
         routeDto.setFromLocation(route.getFromLocation());
         routeDto.setToLocation(route.getToLocation());

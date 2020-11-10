@@ -1,18 +1,15 @@
 package com.meni.server.service;
 
 import com.meni.server.exception.AdNotFoundException;
-import com.meni.server.exception.StatusNotValidException;
 import com.meni.server.model.AdDto;
 import com.meni.server.model.RouteDto;
 import com.meni.server.model.Status;
 import com.meni.server.repo.*;
-import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -39,7 +36,7 @@ public class AdsService {
         Ad ad = toEntity(dto);
         Ad updatedAd = adRepository.save(ad);
         AdDto adDto= Ad.convertAdToAdDTO(updatedAd);
-        User user = handleUser(adDto.getUser_id());//checks if user exist
+        User user = handleUser(adDto.getUserId());//checks if user exist
         user.addAd(ad);
         userRepository.save(user);
         return adDto;
@@ -64,7 +61,7 @@ public class AdsService {
 
         Ad entity = new Ad();
 
-        long userId = dto.getUser_id();
+        long userId = dto.getUserId();
         entity.setRoute(toRequestedRoute(dto.getRoute()));
         entity.setDescription(dto.getDescription().toLowerCase());
         entity.setTitle(dto.getTitle().toLowerCase());
