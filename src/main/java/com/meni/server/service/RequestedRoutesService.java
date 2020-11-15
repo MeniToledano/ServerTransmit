@@ -19,8 +19,8 @@ public class RequestedRoutesService {
         repository.save(toEntity(dto));
     }
 
-    public void delete(long id) {
-        repository.deleteById(id);
+    public void delete(String id) {
+        repository.deleteById(Long.parseLong(id));
     }
 
     public List<RouteDto> getRoutes() {

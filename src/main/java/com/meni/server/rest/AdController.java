@@ -16,19 +16,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AdController {
     @Autowired
     AdsService service;
 
     @GetMapping("/ads")
     public Map<String , List<AdDto>> getAds() {
-        return Map.of("Ads",service.getAds());
+        return Map.of("ads",service.getAds());
     }
 
     @PostMapping("/ads")
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public AdDto postAd(@RequestBody AdDto dto) {
-        return service.add(dto);
+    public Map<String,AdDto> postAd(@RequestBody AdDto dto) {
+        return Map.of("ad",service.add(dto));
     }
 
     @GetMapping(value = "/user/{id}/ads")
@@ -41,13 +41,13 @@ public class AdController {
             }
         }
         if(sort==null && limit==null) {
-            return Map.of("Ads", service.getUserAds(id));
+            return Map.of("ads", service.getUserAds(id));
         } else if(sort==null && limit!=null){
-            return Map.of("Ads", service.getSortedAds("desc", Integer.parseInt(limit), id));
+            return Map.of("ads", service.getSortedAds("desc", Integer.parseInt(limit), id));
         } else if(sort!=null && limit==null){
-            return Map.of("Ads", service.getSortedAds(sort, 10, id));
+            return Map.of("ads", service.getSortedAds(sort, 10, id));
         }else{
-            return Map.of("Ads", service.getSortedAds(sort, Integer.parseInt(limit), id));
+            return Map.of("ads", service.getSortedAds(sort, Integer.parseInt(limit), id));
         }
 
     }
@@ -58,6 +58,7 @@ public class AdController {
         service.getAdById(ad_id);  }
 
     @DeleteMapping("/user/{id}/ads/{ad_id}")
+    @ResponseBody
     public void delete(@PathVariable long ad_id,@PathVariable long id) {
         service.delete(ad_id);  }
 

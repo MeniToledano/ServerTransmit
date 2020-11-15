@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user/{id}/routes")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class VolunteerRoutesController {
     @Autowired
     VolunteersRoutesService routesService;

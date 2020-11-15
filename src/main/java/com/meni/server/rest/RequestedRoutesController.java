@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/requestRoutes")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RequestedRoutesController {
     @Autowired
     RequestedRoutesService service;
@@ -25,7 +26,7 @@ public class RequestedRoutesController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(required = true) long id) {
+    public void delete(@PathVariable(required = true) String id) {
         service.delete(id);
     }
 
