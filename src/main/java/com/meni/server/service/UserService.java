@@ -1,5 +1,6 @@
 package com.meni.server.service;
 
+import com.meni.server.model.LoginDto;
 import com.meni.server.model.UserDto;
 import com.meni.server.repo.User;
 import com.meni.server.repo.UserRepository;
@@ -66,7 +67,7 @@ public class UserService {
         return optionalUser.get();
     }
 
-    public UserDto getUserByLogin(UserDto dto) {
+    public UserDto getUserByLogin(LoginDto dto) {
         Optional<User> optionalUser = Optional.ofNullable(userRepository.findByUserNameAndPassword(dto.getUserName(), dto.getPassword()));
         if(optionalUser.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
