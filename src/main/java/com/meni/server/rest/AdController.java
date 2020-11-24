@@ -6,6 +6,7 @@ import com.meni.server.model.Status;
 import com.meni.server.model.StatusStringDTO;
 import com.meni.server.service.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +63,10 @@ public class AdController {
     public void delete(@PathVariable long ad_id,@PathVariable long id) {
         service.delete(ad_id);  }
 
-    @PostMapping("/user/{id}/ads/{ad_id}/status")
+    @PostMapping(value = "/user/{id}/ads/{ad_id}/status", produces="application/json")
     public void postAdStatus(@RequestBody StatusStringDTO status,
-                                       @PathVariable(required = true) long ad_id) {
-         service.updateStatus(ad_id, status.getStatus());
-
+                             @PathVariable(required = true) long ad_id) {
+        service.updateStatus(ad_id, status.getStatus());
     }
 
     @GetMapping("/job/match")
