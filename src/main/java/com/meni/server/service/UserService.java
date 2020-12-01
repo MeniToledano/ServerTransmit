@@ -23,7 +23,7 @@ public class UserService {
         if (userRepository.findByUserName(dto.getUserName()) == null){
             return User.convertUserToUserDto(userRepository.save(toEntity(dto)));
         }else{
-            return null;
+            return new UserDto(); // todo: should handle when user already exist
         }
     }
 
