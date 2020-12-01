@@ -168,4 +168,8 @@ public class AdsService {
             }
         }
     }
+
+    public List<AdDto> getAdsByStatus(String status) {
+        return Ad.convertListAdsToListAdsDto((List<Ad>) adRepository.findByStatus(Status.valueOf(status)));
+    }
 }

@@ -35,6 +35,7 @@ public class UserService {
         return User.convertListUsersToListUsersDto((List<User>) userRepository.findAll());
     }
 
+
     public UserDto getUserById(long id) {
         User user = handleUser(id);
         return User.convertUserToUserDto(user);

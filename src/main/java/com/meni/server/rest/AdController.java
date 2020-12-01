@@ -23,9 +23,13 @@ public class AdController {
     @Autowired
     AdsService service;
 
-    @GetMapping("/ads")
-    public Map<String , List<AdDto>> getAds() {
-        return Map.of("ads",service.getAds());
+    @GetMapping("/ads/{status}")
+    public Map<String , List<AdDto>> getAds(@PathVariable(required = false) String status) {
+        if (status != null){
+            return Map.of("ads",service.getAdsByStatus(status));
+        }else{
+            return Map.of("ads",service.getAds());
+        }
     }
 
     @PostMapping("/ads")
