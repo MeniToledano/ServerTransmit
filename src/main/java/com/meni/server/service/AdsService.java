@@ -145,7 +145,7 @@ public class AdsService {
     }
 
     public void matchRequestedRoutesWithVolunteerRoutes() {
-        List<Ad> allAds = (List<Ad>) adRepository.findAll();
+        List<Ad> allAds = (List<Ad>) adRepository.findByStatus(Status.PENDING); // iterator
 
         for (Ad ad : allAds) {
             RequestedRoute requestedRoutes = ad.getRoute();
@@ -162,6 +162,7 @@ public class AdsService {
                             ad.setVolunteerData(volunteerRoute.getUser());
                             ad.setStatus(Status.MATCH_FOUND);
                             adRepository.save(ad);
+                            break; //check if this works
                         }
                     }
                 }

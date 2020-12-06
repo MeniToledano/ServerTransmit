@@ -8,6 +8,7 @@ import com.meni.server.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -23,10 +24,14 @@ public class UserService {
         if (userRepository.findByUserName(dto.getUserName()) == null){
             return User.convertUserToUserDto(userRepository.save(toEntity(dto)));
         }else{
-            return new UserDto(); // todo: should handle when user already exist
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"user already exist"); // todo: should handle when user already exist
         }
     }
 
+    
+    
+    
+    
     public void delete(long id) {
         userRepository.deleteById(id);
     }
