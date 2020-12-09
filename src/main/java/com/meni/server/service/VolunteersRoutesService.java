@@ -39,9 +39,9 @@ public class VolunteersRoutesService {
     }
 
     private VolunteerRoute handleVolunteerRoutes(long id) {
-        Optional<VolunteerRoute> optionalVolunteerRoute= volunteerRoutesRepository.findById(id);
-        if(optionalVolunteerRoute.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        Optional<VolunteerRoute> optionalVolunteerRoute = volunteerRoutesRepository.findById(id);
+        if (optionalVolunteerRoute.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         return optionalVolunteerRoute.get();
     }
@@ -60,10 +60,10 @@ public class VolunteersRoutesService {
     private List<VolunteerRoute> toEntity(long userID, RouteDto[] dto) {
 
         List<VolunteerRoute> listOfRoutes = new LinkedList<>();
-        User user =handleUser(userID); //checks if user exist
+        User user = handleUser(userID); //checks if user exist
         volunteerRoutesRepository.deleteByUser(user); //delete user routes
 
-        for(RouteDto routeDto: dto) {
+        for (RouteDto routeDto : dto) {
             VolunteerRoute entity = toVolunteerRoute(routeDto);
             entity.setUser(user); //associate each route with user
             volunteerRoutesRepository.save(entity);
@@ -75,8 +75,8 @@ public class VolunteersRoutesService {
 
     private User handleUser(long userID) {
         Optional<User> optionalUser = userRepository.findById(userID);
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND ,"Unable to find resource");
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
         return optionalUser.get();
     }
@@ -93,9 +93,9 @@ public class VolunteersRoutesService {
     public Map<String, List<UserDto>> getUserByRoute_FromLocationAndToLocation(String fromLocation, String toLocation) {
         List<VolunteerRoute> matchRoutes = volunteerRoutesRepository.findByFromLocationAndToLocation(fromLocation, toLocation);
         List<User> matchUsers = new LinkedList<>();
-        for( VolunteerRoute vr : matchRoutes){
+        for (VolunteerRoute vr : matchRoutes) {
             matchUsers.add(vr.getUser());
         }
-        return Map.of("volunteers:",User.convertListUsersToListUsersDto(matchUsers));
+        return Map.of("volunteers:", User.convertListUsersToListUsersDto(matchUsers));
     }
 }

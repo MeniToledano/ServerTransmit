@@ -40,7 +40,8 @@ public class VolunteerRoute implements Serializable {
     @JoinColumn(name = "userId")
     private User user;
 
-    public VolunteerRoute() { }
+    public VolunteerRoute() {
+    }
 
     public static RouteDto convertVolunteerRouteToRouteDto(VolunteerRoute route) {
         RouteDto routeDto = new RouteDto();
@@ -54,9 +55,9 @@ public class VolunteerRoute implements Serializable {
         return routeDto;
     }
 
-    public static List<RouteDto> convertListOfVolunteerRoutesToListRouteDto(List<VolunteerRoute> list){
+    public static List<RouteDto> convertListOfVolunteerRoutesToListRouteDto(List<VolunteerRoute> list) {
         List<RouteDto> convertedList = new LinkedList<>();
-        for(VolunteerRoute route : list){
+        for (VolunteerRoute route : list) {
             convertedList.add(convertVolunteerRouteToRouteDto(route));
         }
         return convertedList;

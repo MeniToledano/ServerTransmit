@@ -1,6 +1,5 @@
 package com.meni.server.rest;
 
-import com.meni.server.exception.UserAlreadyExistAuthenticationException;
 import com.meni.server.model.LoginDto;
 import com.meni.server.model.UserDto;
 import com.meni.server.service.UserService;

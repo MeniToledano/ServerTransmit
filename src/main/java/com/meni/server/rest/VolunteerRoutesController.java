@@ -18,18 +18,18 @@ public class VolunteerRoutesController {
 
     @GetMapping
     public Map<String, List<RouteDto>> getRoutes(@PathVariable("id") long userId) {
-        return Map.of("routes",routesService.getRoutes(userId));
+        return Map.of("routes", routesService.getRoutes(userId));
     }
 
     @PostMapping
-    public Map<String, List<RouteDto>> postUserRoutes(@PathVariable("id") long userId , @RequestBody RouteDto[] routes) {
-        return Map.of("routes",routesService.add(userId, routes));
+    public Map<String, List<RouteDto>> postUserRoutes(@PathVariable("id") long userId, @RequestBody RouteDto[] routes) {
+        return Map.of("routes", routesService.add(userId, routes));
     }
 
     @GetMapping("/fromLocation:{fromLocation}/toLocation:{toLocation}")
     public Map<String, List<UserDto>> getByFromLocation(@PathVariable(required = true) String fromLocation
-    ,@PathVariable(required = true) String toLocation) {
-        return routesService.getUserByRoute_FromLocationAndToLocation(fromLocation,toLocation);
+            , @PathVariable(required = true) String toLocation) {
+        return routesService.getUserByRoute_FromLocationAndToLocation(fromLocation, toLocation);
     }
 
     @GetMapping("/{id}")

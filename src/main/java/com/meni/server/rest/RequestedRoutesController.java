@@ -1,7 +1,6 @@
 package com.meni.server.rest;
 
 import com.meni.server.model.RouteDto;
-import com.meni.server.repo.RequestedRoute;
 import com.meni.server.service.RequestedRoutesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

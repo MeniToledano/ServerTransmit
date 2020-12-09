@@ -37,7 +37,8 @@ public class RequestedRoute {
     @OneToOne(mappedBy = "route")
     private Ad ad;
 
-    public RequestedRoute() { }
+    public RequestedRoute() {
+    }
 
     public static RouteDto convertRequestedRouteToRouteDto(RequestedRoute route) {
         RouteDto routeDto = new RouteDto();
@@ -51,9 +52,9 @@ public class RequestedRoute {
         return routeDto;
     }
 
-    public static List<RouteDto> convertListOfRequestedRoutesToListRouteDto(List<RequestedRoute> list){
+    public static List<RouteDto> convertListOfRequestedRoutesToListRouteDto(List<RequestedRoute> list) {
         List<RouteDto> convertedList = new LinkedList<>();
-        for(RequestedRoute route : list){
+        for (RequestedRoute route : list) {
             convertedList.add(convertRequestedRouteToRouteDto(route));
         }
         return convertedList;

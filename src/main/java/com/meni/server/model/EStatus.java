@@ -1,6 +1,6 @@
 package com.meni.server.model;
 
-public enum Status {
+public enum EStatus {
 
     RESOLVED("RESOLVED"),
     MATCH_FOUND("MATCH_FOUND"),
@@ -8,7 +8,7 @@ public enum Status {
 
     private final String status;
 
-    Status(String stat) {
+    EStatus(String stat) {
         this.status = stat;
     }
 }

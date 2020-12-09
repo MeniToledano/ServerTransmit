@@ -2,8 +2,8 @@ package com.meni.server.service;
 
 import com.meni.server.exception.AdNotFoundException;
 import com.meni.server.model.AdDto;
+import com.meni.server.model.EStatus;
 import com.meni.server.model.RouteDto;
-import com.meni.server.model.Status;
 import com.meni.server.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -93,16 +93,16 @@ public class AdsService {
             Ad ad = getAdById(ad_id);
             switch (status) {
                 case "MATCH_FOUND":
-                    ad.setStatus(Status.MATCH_FOUND);
+                    ad.setStatus(EStatus.MATCH_FOUND);
                     break;
                 case "RESOLVED":
-                    ad.setStatus(Status.RESOLVED);
+                    ad.setStatus(EStatus.RESOLVED);
                     break;
                 case "PENDING":
-                    ad.setStatus(Status.PENDING);
+                    ad.setStatus(EStatus.PENDING);
                     break;
                 default:
-                    throw new EnumConstantNotPresentException(Status.class, status);
+                    throw new EnumConstantNotPresentException(EStatus.class, status);
 
             }
             adRepository.save(ad);
@@ -145,7 +145,7 @@ public class AdsService {
     }
 
     public void matchRequestedRoutesWithVolunteerRoutes() {
-        List<Ad> allAds = (List<Ad>) adRepository.findByStatus(Status.PENDING); // iterator
+        List<Ad> allAds = (List<Ad>) adRepository.findByStatus(EStatus.PENDING); // iterator
 
         for (Ad ad : allAds) {
             RequestedRoute requestedRoutes = ad.getRoute();
@@ -154,13 +154,13 @@ public class AdsService {
                     requestedRoutes.getToLocation());
             if (matchRoutes != null) {
                 for (VolunteerRoute volunteerRoute : matchRoutes) {
-                    System.out.println("Status.PENDING.toString()= " + Status.PENDING.toString());
-                    System.out.println("ad.getStatus().equals(Status.PENDING.toString()= " + ad.getStatus().equals(Status.PENDING.toString()));
+                    System.out.println("Status.PENDING.toString()= " + EStatus.PENDING.toString());
+                    System.out.println("ad.getStatus().equals(Status.PENDING.toString()= " + ad.getStatus().equals(EStatus.PENDING.toString()));
                     System.out.println("ad.getStatus()= " + ad.getStatus());
                     if (volunteerRoute.getUser().getId() != ad.getUser().getId()) {
-                        if (ad.getStatus().equals(Status.PENDING)) {
+                        if (ad.getStatus().equals(EStatus.PENDING)) {
                             ad.setVolunteerData(volunteerRoute.getUser());
-                            ad.setStatus(Status.MATCH_FOUND);
+                            ad.setStatus(EStatus.MATCH_FOUND);
                             adRepository.save(ad);
                             break; //check if this works
                         }
@@ -171,6 +171,6 @@ public class AdsService {
     }
 
     public List<AdDto> getAdsByStatus(String status) {
-        return Ad.convertListAdsToListAdsDto((List<Ad>) adRepository.findByStatus(Status.valueOf(status)));
+        return Ad.convertListAdsToListAdsDto((List<Ad>) adRepository.findByStatus(EStatus.valueOf(status)));
     }
 }

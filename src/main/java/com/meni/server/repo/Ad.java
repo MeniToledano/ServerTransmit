@@ -1,7 +1,7 @@
 package com.meni.server.repo;
 
 import com.meni.server.model.AdDto;
-import com.meni.server.model.Status;
+import com.meni.server.model.EStatus;
 import com.sun.istack.Nullable;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Ads")
-public class Ad{
+public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Ad{
     private LocalDateTime updateDateTime;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private EStatus status;
 
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "route_id", referencedColumnName = "requestedRouteId")
@@ -51,10 +51,10 @@ public class Ad{
     private String description;
 
     public Ad() {
-        this.status = Status.PENDING;
+        this.status = EStatus.PENDING;
     }
 
-    public static AdDto convertAdToAdDTO(Ad ad){
+    public static AdDto convertAdToAdDTO(Ad ad) {
         AdDto adDto = new AdDto();
 
         adDto.setCreateDateTime(ad.getCreateDateTime());
@@ -72,9 +72,9 @@ public class Ad{
         return adDto;
     }
 
-    public static List<AdDto> convertListAdsToListAdsDto(List<Ad> ads){
+    public static List<AdDto> convertListAdsToListAdsDto(List<Ad> ads) {
         List<AdDto> adsDTO = new LinkedList<>();
-        for (Ad ad : ads){
+        for (Ad ad : ads) {
             adsDTO.add(convertAdToAdDTO(ad));
         }
         return adsDTO;

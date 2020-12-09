@@ -11,6 +11,7 @@ public interface VolunteersRoutsRepository extends CrudRepository<VolunteerRoute
 
     @Transactional
     Long deleteByUser(User user);
+
     List<VolunteerRoute> findByFromLocationAndToLocation(String fromLocation, String ToLocation);
 }
 

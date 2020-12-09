@@ -1,6 +1,5 @@
 package com.meni.server.service;
 
-import com.meni.server.exception.UserAlreadyExistAuthenticationException;
 import com.meni.server.model.LoginDto;
 import com.meni.server.model.UserDto;
 import com.meni.server.repo.User;
@@ -8,7 +7,6 @@ import com.meni.server.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,18 +18,13 @@ public class UserService {
     UserRepository userRepository;
 
     public UserDto add(UserDto dto) {
-
-        if (userRepository.findByUserName(dto.getUserName()) == null){
+        if (userRepository.findByUserName(dto.getUserName()) == null) {
             return User.convertUserToUserDto(userRepository.save(toEntity(dto)));
-        }else{
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"user already exist"); // todo: should handle when user already exist
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "user already exist"); // todo: should handle when user already exist
         }
     }
 
-    
-    
-    
-    
     public void delete(long id) {
         userRepository.deleteById(id);
     }
@@ -39,7 +32,6 @@ public class UserService {
     public List<UserDto> getUsers() {
         return User.convertListUsersToListUsersDto((List<User>) userRepository.findAll());
     }
-
 
     public UserDto getUserById(long id) {
         User user = handleUser(id);
@@ -51,7 +43,7 @@ public class UserService {
         entity.setName(userDto.getFirstName());
         entity.setLastName(userDto.getLastName());
         entity.setPhone(userDto.getPhone());
-        entity.setEMail(userDto.getEmail());
+        entity.setEmail(userDto.getEmail());
         entity.setUserName(userDto.getUserName());
         entity.setPassword(userDto.getPassword());
         return entity;
@@ -65,7 +57,7 @@ public class UserService {
 
     private void updateUser(User user, UserDto userDto) {
         if (userDto.getEmail() != null) {
-            user.setEMail(userDto.getEmail());
+            user.setEmail(userDto.getEmail());
         }
         if (userDto.getLastName() != null) {
             user.setLastName(userDto.getLastName());
@@ -88,7 +80,7 @@ public class UserService {
     }
 
     public UserDto getUserByLogin(LoginDto dto) {
-        Optional<User> optionalUser = Optional.ofNullable(userRepository.findByUserNameAndPassword(dto.getUserName(), dto.getPassword()));
+        Optional<User> optionalUser = userRepository.findByUserNameAndPassword(dto.getUserName(), dto.getPassword());
         if (optionalUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
         }
