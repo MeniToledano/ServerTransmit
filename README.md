@@ -1,6 +1,3 @@
-
-Readme
-----
 # OnTheGo - Server
 This is the server repo, view here the client repo:
 https://github.com/MeniToledano/ClientTransmit
