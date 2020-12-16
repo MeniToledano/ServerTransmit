@@ -46,3 +46,6 @@ The current version includes:
 
 # Installation and Setup Instructions
 TBD
+
+#Images
+https://github.com/MeniToledano/ServerTransmit/issues/1
