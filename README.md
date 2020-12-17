@@ -45,4 +45,5 @@ The current version includes:
 TBD
 
 # Images
-https://github.com/MeniToledano/ServerTransmit/issues/1
+<img width="477" alt="Dashboard" src="https://user-images.githubusercontent.com/36308335/102398866-81f1c480-3fe8-11eb-89ef-53d3daf2ef88.PNG">
+
