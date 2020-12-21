@@ -27,18 +27,18 @@ public class VolunteerRoutesController {
     }
 
     @GetMapping("/fromLocation:{fromLocation}/toLocation:{toLocation}")
-    public Map<String, List<UserDto>> getByFromLocation(@PathVariable(required = true) String fromLocation
-    ,@PathVariable(required = true) String toLocation) {
+    public Map<String, List<UserDto>> getByFromLocation(@PathVariable("fromLocation") String fromLocation
+    ,@PathVariable() String toLocation) {
         return routesService.getUserByRoute_FromLocationAndToLocation(fromLocation,toLocation);
     }
 
     @GetMapping("/{id}")
-    public RouteDto getById(@PathVariable(required = true) long id) {
+    public RouteDto getById(@PathVariable("id") long id) {
         return routesService.getAdById(id);
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, List<RouteDto>> delete(@PathVariable(required = true) long id) {
+    public Map<String, List<RouteDto>> delete(@PathVariable("id") long id) {
         return Map.of("routes:", routesService.delete(id));
     }
 

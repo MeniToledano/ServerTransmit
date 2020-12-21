@@ -53,9 +53,7 @@ public class RequestedRoute {
 
     public static List<RouteDto> convertListOfRequestedRoutesToListRouteDto(List<RequestedRoute> list){
         List<RouteDto> convertedList = new LinkedList<>();
-        for(RequestedRoute route : list){
-            convertedList.add(convertRequestedRouteToRouteDto(route));
-        }
+        list.forEach(requestedRoute -> convertedList.add(convertRequestedRouteToRouteDto(requestedRoute)));
         return convertedList;
     }
 }

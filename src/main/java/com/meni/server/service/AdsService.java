@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -39,20 +38,11 @@ public class AdsService {
         Ad ad = toEntity(dto);
         Ad updatedAd = adRepository.save(ad);
         AdDto adDto = Ad.convertAdToAdDTO(updatedAd);
-        User user = handleUser(adDto.getUserId());//checks if user exist
+        User user = handleUser(adDto.getUserId());
         user.addAd(ad);
         userRepository.save(user);
         return adDto;
 
-    }
-
-    public List<AdDto> getUserAds(long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
-        }
-        User user = optionalUser.get();
-        return Ad.convertListAdsToListAdsDto(user.getAds());
     }
 
     public Ad getAdById(long id) {
@@ -63,19 +53,10 @@ public class AdsService {
     private Ad toEntity(AdDto dto) {
 
         Ad entity = new Ad();
-
-        long userId = dto.getUserId();
         entity.setRoute(toRequestedRoute(dto.getRoute()));
         entity.setDescription(dto.getDescription().toLowerCase());
         entity.setTitle(dto.getTitle().toLowerCase());
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
-        }
-
-        User user = optionalUser.get();
-        entity.setUser(user);
+        entity.setUser(handleUser(dto.getUserId()));
         return entity;
     }
 
@@ -113,23 +94,12 @@ public class AdsService {
 
     public List<AdDto> getSortedAds(String sort, int limit, long id) {
 
-        User user = handleUser(id); //checks if user exist
-        List<Ad> list = user.getAds();
+        List<Ad> list = handleUser(id).getAds();
 
         if (sort.toLowerCase().equals("desc")) {
-            Collections.sort(list, new Comparator<Ad>() {
-                @Override
-                public int compare(Ad ad1, Ad ad2) {
-                    return ad1.getUpdateDateTime().compareTo(ad2.getUpdateDateTime());
-                }
-            });
+            list.sort(Comparator.comparing(Ad::getUpdateDateTime));
         } else if (sort.toLowerCase().equals("asc")) {
-            Collections.sort(list, new Comparator<Ad>() {
-                @Override
-                public int compare(Ad ad1, Ad ad2) {
-                    return ad2.getUpdateDateTime().compareTo(ad1.getUpdateDateTime());
-                }
-            });
+            list.sort((ad1, ad2) -> ad2.getUpdateDateTime().compareTo(ad1.getUpdateDateTime()));
         }
 
         return Ad.convertListAdsToListAdsDto(list.subList(0, Math.min(list.size(), limit)));
@@ -145,32 +115,35 @@ public class AdsService {
     }
 
     public void matchRequestedRoutesWithVolunteerRoutes() {
-        List<Ad> allAds = (List<Ad>) adRepository.findByStatus(Status.PENDING); // iterator
+        List<Ad> allAds = adRepository.findByStatus(Status.PENDING);
 
-        for (Ad ad : allAds) {
+        allAds.forEach(ad -> {
             RequestedRoute requestedRoutes = ad.getRoute();
             List<VolunteerRoute> matchRoutes = volunteersRoutsRepository.findByFromLocationAndToLocation(
                     requestedRoutes.getFromLocation(),
                     requestedRoutes.getToLocation());
-            if (matchRoutes != null) {
-                for (VolunteerRoute volunteerRoute : matchRoutes) {
-                    System.out.println("Status.PENDING.toString()= " + Status.PENDING.toString());
-                    System.out.println("ad.getStatus().equals(Status.PENDING.toString()= " + ad.getStatus().equals(Status.PENDING.toString()));
-                    System.out.println("ad.getStatus()= " + ad.getStatus());
-                    if (volunteerRoute.getUser().getId() != ad.getUser().getId()) {
-                        if (ad.getStatus().equals(Status.PENDING)) {
-                            ad.setVolunteerData(volunteerRoute.getUser());
-                            ad.setStatus(Status.MATCH_FOUND);
-                            adRepository.save(ad);
-                            break; //check if this works
-                        }
-                    }
-                }
-            }
+
+            findVolunteer(ad, matchRoutes);
+        });
+
+    }
+
+    private void findVolunteer(Ad ad, List<VolunteerRoute> matchRoutes) {
+        if (matchRoutes == null) {
+            return;
         }
+
+        matchRoutes.stream()
+                .filter(volunteerRoute -> volunteerRoute.getUser().getId() != ad.getUser().getId())
+                .findAny()
+                .ifPresent(volunteerRoute -> {
+                    ad.setVolunteerData(volunteerRoute.getUser());
+                    ad.setStatus(Status.MATCH_FOUND);
+                    adRepository.save(ad);
+                });
     }
 
     public List<AdDto> getAdsByStatus(String status) {
-        return Ad.convertListAdsToListAdsDto((List<Ad>) adRepository.findByStatus(Status.valueOf(status)));
+        return Ad.convertListAdsToListAdsDto(adRepository.findByStatus(Status.valueOf(status)));
     }
 }

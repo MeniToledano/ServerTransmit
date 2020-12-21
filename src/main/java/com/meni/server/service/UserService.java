@@ -1,6 +1,5 @@
 package com.meni.server.service;
 
-import com.meni.server.exception.UserAlreadyExistAuthenticationException;
 import com.meni.server.model.LoginDto;
 import com.meni.server.model.UserDto;
 import com.meni.server.repo.User;
@@ -8,7 +7,6 @@ import com.meni.server.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -28,10 +26,6 @@ public class UserService {
         }
     }
 
-    
-    
-    
-    
     public void delete(long id) {
         userRepository.deleteById(id);
     }
@@ -39,7 +33,6 @@ public class UserService {
     public List<UserDto> getUsers() {
         return User.convertListUsersToListUsersDto((List<User>) userRepository.findAll());
     }
-
 
     public UserDto getUserById(long id) {
         User user = handleUser(id);

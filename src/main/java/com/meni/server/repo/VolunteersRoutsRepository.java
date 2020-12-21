@@ -10,7 +10,7 @@ import java.util.List;
 public interface VolunteersRoutsRepository extends CrudRepository<VolunteerRoute, Long> {
 
     @Transactional
-    Long deleteByUser(User user);
+    void deleteByUser(User user);
     List<VolunteerRoute> findByFromLocationAndToLocation(String fromLocation, String ToLocation);
 }
 

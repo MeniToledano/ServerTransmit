@@ -55,11 +55,9 @@ public class VolunteerRoute implements Serializable {
     }
 
     public static List<RouteDto> convertListOfVolunteerRoutesToListRouteDto(List<VolunteerRoute> list){
-        List<RouteDto> convertedList = new LinkedList<>();
-        for(VolunteerRoute route : list){
-            convertedList.add(convertVolunteerRouteToRouteDto(route));
-        }
-        return convertedList;
+        List<RouteDto> newList = new LinkedList<>();
+        list.forEach(route -> newList.add(convertVolunteerRouteToRouteDto(route)));
+        return newList;
     }
 
 

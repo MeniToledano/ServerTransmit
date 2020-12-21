@@ -75,9 +75,7 @@ public class User{
 
     public static List<UserDto> convertListUsersToListUsersDto(List<User> list){
         List<UserDto> newList = new LinkedList<>();
-        for (User user : list){
-            newList.add(convertUserToUserDto(user));
-        }
+        list.forEach(user -> newList.add(convertUserToUserDto(user)));
         return newList;
     }
 }
